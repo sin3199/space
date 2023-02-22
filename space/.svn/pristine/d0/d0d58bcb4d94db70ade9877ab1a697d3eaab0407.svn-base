@@ -1,0 +1,88 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+ <html lang ="en">
+<head>
+<title>www.space.com/Host_info_update</title>
+<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+ <link href="resources/bootstrap/css/bootstrap.css" rel="stylesheet">
+ </head>
+<body>
+   <script type="text/javascript">
+	function check(){
+		if (f.member_pw.value==""){
+			alert("비밀번호를 반드시 입력해야 합니다.")
+			f.member_pw.focus()
+			return
+		}
+		document.f.submit()
+	}
+</script>
+
+<tr>
+			<td align="right">
+			<a href="host_main.do" class="btn btn-primary btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-flag"></i>
+                                        </span>
+                                        <span class="text">호스트홈</span>
+                                    </a>
+			</td>
+		</tr>
+
+<div align="center">
+	<form name="f" action="room_update.do" method="post" onsubmit="return checkRoom()">
+		<input type="hidden" name="room_no" value="${getRoom.room_no}"/>
+		
+		<h1 class="h3 mb-2 text-gray-800"> 내 정보(HOST) 수정</h1>
+		
+		<div class="input-group mb-3">
+		 	 <div class="input-group-prepend">
+   		 		<span class="input-group-text" name="member_nm">닉네임</span>
+  			</div>
+  			<input type="text" name="member_nm"  value="${getMember.member_nm}" class="form-control" >
+		</div>
+		
+		<div class="input-group mb-3">
+		 	 <div class="input-group-prepend">
+   		 		<span class="input-group-text" name="member_email">email</span>
+  			</div>
+  			<input type="text" name="member_email"  value="${getMember.member_email}" class="form-control" readOnly >
+		</div>
+		
+		<div class="input-group mb-3">
+		 	 <div class="input-group-prepend">
+   		 		<span class="input-group-text" name="member_pw">비밀번호 변경</span>
+  			</div>
+  			<input type="text" name="member_pw"  class="form-control">
+		</div>
+		
+		<div class="input-group mb-3">
+		 	 <div class="input-group-prepend">
+   		 		<span class="input-group-text" id="member_pw2">비밀번호 확인</span>
+  			</div>
+  			<input type="text" name="member_pw2" class="form-control">
+		</div>
+		
+		<div class="input-group mb-3">
+		 	 <div class="input-group-prepend">
+   		 		<span class="input-group-text" name="member_pno">연락처</span>
+  			</div>
+  			<input type="text" name="member_pno"  value="${getMember.member_pno}" class="form-control" >
+		</div>
+		<div class="input-group mb-3">
+		 	 <div class="input-group-prepend">
+   		 		<span class="input-group-text" name="member_reg_dt">가입일</span>
+  			</div>
+  			<input type="text" name="member_reg_dt"  value="${getMember.member_reg_dt}" class="form-control"  readOnly>
+		</div>
+	</form>
+</div>
+<script src="resources/js/jquery.js" ></script>
+    <script type="text/javascript" src="resources/bootstrap/js/bootstrap.bundle.js" ></script>
+</body>
+</html>
+    
+    
+    
+ 

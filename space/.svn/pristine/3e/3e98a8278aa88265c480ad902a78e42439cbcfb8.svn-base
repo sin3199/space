@@ -1,0 +1,255 @@
+package com.bigdataB.space;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.bigdataB.space.dto.MemberDTO;
+import com.bigdataB.space.dto.ReserveDTO;
+import com.bigdataB.space.dto.SpaceDTO;
+import com.bigdataB.space.dto.SpaceDibsDTO;
+import com.bigdataB.space.dto.SpaceRoomDTO;
+import com.bigdataB.space.dto.SpaceTypeDTO;
+import com.bigdataB.space.service.GuestMapper;
+
+
+/**
+ * Handles requests for the application home page.
+ */
+@Controller
+public class GuestController {
+
+	@Autowired
+	GuestMapper guestMapper;
+
+	@RequestMapping(value = "index.do")
+	public String main() {
+		return "main";
+	}
+		@RequestMapping(value = "host.do")
+		public String host(HttpSession session) {
+			session.invalidate();
+			return "host/host_home";
+		}
+	//guest메인화면
+	@RequestMapping(value = "guest_main.do")
+	public String guest_main(HttpServletRequest req,HttpSession session) {
+		session.setAttribute("member_no",1);//member_no 테스트
+		List<SpaceTypeDTO> list = guestMapper.ListSpaceType();
+		req.setAttribute("listSpaceType", list);
+		req.removeAttribute("searchString");
+		return "guest/guest_main";
+	}
+	
+	//내 정보 이동
+	@RequestMapping(value = "guest_my_info.do")
+	public String guest_my_info(HttpServletRequest req, HttpSession session) {
+		MemberDTO mdto=(MemberDTO) session.getAttribute("memberdto");
+		if(mdto.getMember_grade()!=1) {
+			
+		}
+		return "guest/guest_my_info";
+	}
+	
+	//비밀번호 변경 이동
+	@RequestMapping(value="guest_my_passwd_edit.do")
+	public String guest_my_passwd_edit() {
+		return "guest/guest_my_passwd_edit";
+	}
+	
+	//리뷰쓰기 페이지 이동
+	@RequestMapping(value="guest_review_write.do")
+	public String guest_review_write() {
+		return "guest/guest_review_write";
+	}
+	//내 리뷰 페이지 이동
+	@RequestMapping(value="guest_my_review.do")
+	public String  guest_my_review() {
+		return "guest/guest_my_review";
+	}
+
+	//host페이지 이동
+	@RequestMapping(value = "host_home.do")
+	public String HostHome() {
+		return "host/host_home";
+	}
+	// guest_main에서 카테고리를 선택해서 넘어올 때
+	@RequestMapping(value = "guest_categoryView.do")
+	public String guest_categoryView(HttpServletRequest req, @RequestParam int cate_no) {
+		List<SpaceRoomDTO> list = guestMapper.listSapceRoom(cate_no);
+		SpaceTypeDTO stdto = guestMapper.getCate(cate_no);
+		req.setAttribute("getSpaceRoom", list);
+		req.setAttribute("mode", stdto);
+		return "guest/guest_categoryView";
+	}
+	// top의 search를 통해서 넘어올 떄	
+	 @RequestMapping(value="search.do",method=RequestMethod.POST)
+	 public String searchList(HttpServletRequest req,@RequestParam String searchString) {
+		 String q = searchString;
+		 //List<SpaceDTO> list = guestMapper.listCategory(q);
+		 List<SpaceRoomDTO> list = guestMapper.listCategory(q);
+		 req.setAttribute("getSpaceRoom", list);
+		 req.setAttribute("serch", q);
+	 return "guest/guest_categoryView";
+		 }
+	 
+	//카테고리 상세목록에서 건물 상세보기로 이동.
+	@RequestMapping(value = "guest_spaceview.do")
+	public String spaceview(HttpServletRequest req,HttpSession session,@RequestParam int sn) {
+		int room_no = sn;
+		SpaceRoomDTO srdto = guestMapper.getSpaceRoom(room_no);
+		Map<String, String> map = new HashMap();
+		map.put("room_no", Integer.toString(room_no));
+		/*
+		 * HttpSession session_guestMember = req.getSession();
+		 * MemberDTO memberdto = (MemberDTO) session_guestMember.getAttribute("memberdto");
+		 * map.put("member_no", Integer.toString(memberdto.getMember_no()));
+		 */
+		int space_no = srdto.getSpace_no();
+		SpaceDTO sdto = guestMapper.getSpace(space_no);
+		String member_no = String.valueOf(session.getAttribute("member_no"));
+		System.out.println("member_no ="+ member_no);
+		System.out.println("room_no =" + room_no);
+		map.put("member_no",member_no);
+		SpaceTypeDTO stdto = guestMapper.getCate(sdto.getCate_no());
+		String cate_nm = stdto.getCate_nm();
+		List<SpaceDibsDTO> list = guestMapper.findLike(map);
+		int res = 0;
+		if(list.size()>0) {
+			System.out.println("찜목록 있음");
+			res = 1;
+		}else {
+			res=0;
+			System.out.println("찜목록 없음");
+		}
+		req.setAttribute("cate_nm", cate_nm);
+		req.setAttribute("sp", srdto);//SpaceRoom
+		req.setAttribute("like", res);//찜 여부
+		req.setAttribute("sdto", sdto);//Space
+		return "guest/guest_spaceview";
+	}
+
+	//예약 리스트 이동
+	@RequestMapping(value = "guest_reserve.do", method = RequestMethod.POST)
+	public String reserveinput(HttpServletRequest req, @RequestParam Map<String, String> map) {
+		int res = guestMapper.insertRrserve(map);
+		return "guest/guest_reserveList";
+	}
+	
+	/*
+	 * @RequestMapping(value = "workingonit.do") public String workingonit() {
+	 * return "workingonit"; }
+	 */
+	//상세보기화면에서 예약화면으로 이동.
+	@RequestMapping(value="guest_reserve.do")
+	public String guest_reserve(HttpServletRequest req, @RequestParam Map<String, String>map) {
+		req.setAttribute("map", map);
+		return "guest/guest_reserve";
+	}
+	//예약화면에서 예약하기를 누른 후 보여지는 확인 페이지.
+	//예약 내용 확인 페이지.
+	@RequestMapping(value = "guest_checkout.do", method = RequestMethod.POST)
+	public String guest_checkout(HttpServletRequest req, @ModelAttribute ReserveDTO dto, BindingResult result) {
+		if (result.hasErrors()) {
+			dto.setRes_req("요청사항없음");
+		}
+		//int res = guestMapper.insertReserve(dto);
+		System.out.println("res_nm = "+ dto.getRes_nm());
+		System.out.println("res_personnel= "+ dto.getRes_personnel());
+		System.out.println("res_pno= "+ dto.getRes_pno());
+		System.out.println("res_email= "+ dto.getRes_email());
+		System.out.println("res_purpose= "+ dto.getRes_purpose());
+		System.out.println("res_req= "+ dto.getRes_req());
+		System.out.println("start_date= "+ req.getParameter("start_date"));
+		System.out.println("start_time= "+ req.getParameter("start_time"));
+		System.out.println("end_date= "+ req.getParameter("end_date"));
+		System.out.println("end_time= "+ req.getParameter("end_time"));
+		System.out.println("space_nm= "+ req.getParameter("space_nm"));
+		System.out.println("room_no= "+ req.getParameter("room_no"));
+		String member_nm = req.getParameter("member_nm");
+		req.setAttribute("rdto", dto);	//reserve 페이지에서 입력 된 내용 불러오기 위해 req에 dto 저장.
+		return "guest/guest_checkout";
+	}
+//	//상세보기에서 예약화면으로 이동
+//	@RequestMapping(value = "guest_reserve.do", method = RequestMethod.GET)
+//	public String reserve() {
+//		return "guest/guest_reserve";
+//	}
+		//테스트용
+	@RequestMapping(value = "guest_reservelist.do")
+	public String g_reserve_list() {
+		return "guest/guest_reserveList";
+	}
+	//예약 상세 보기 이동
+	@RequestMapping(value="guest_reserve_view.do")
+	public String guset_reserve_view() {
+		return "guest/guest_reserve_view";
+	}
+	//찜목록 이동
+	@RequestMapping(value="guest_dibs.do")
+	public String guest_dibs() {
+		return "guest/guest_dibs";
+	}
+	//찜하기
+	@RequestMapping(value = "guest_like.do")
+	public  @ResponseBody int guest_like(HttpSession session,@RequestParam Map<String,String> map) {
+		String member_no= Integer.toString((Integer) session.getAttribute("member_no"));
+		map.put("member_no", member_no);
+		List<SpaceDibsDTO> list = guestMapper.findLike(map);
+		System.out.println("찾기 완료");
+		System.out.println("room_no="+map.get("room_no"));
+		int res=0;
+		if(list.size()<1) {
+			res = guestMapper.AddLike(map);
+			res = 1;
+			System.out.println("더하기 완료");
+		}else{
+			res = guestMapper.RemoveLike(map);
+			res = 0;
+			System.out.println("지우기 완료");
+		}
+		
+		return res;
+	}
+	
+	@RequestMapping(value = "testing.do")
+	public String testing() {
+		return "test";
+	}
+	@RequestMapping(value = "testing2.do")
+	public String testing2() {
+		return "test1";
+	}
+	@RequestMapping(value = "testing3.do")
+	public String testing3() {
+		return "test3";
+	}
+	@RequestMapping("test.do")
+	public @ResponseBody HashMap<String, Object> test(){
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		result.put("msg", "안녕");
+		return result;
+		
+	}
+
+	
+	
+	
+	
+	@RequestMapping(value = "workingonit.do")
+	public String workingonit() {
+		return "workingonit";
+	}
+}

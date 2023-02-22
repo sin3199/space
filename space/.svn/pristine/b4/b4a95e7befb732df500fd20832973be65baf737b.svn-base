@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 	<!-- 테이블 명 변경 해야함
+ 		 test2 = category
+ 		 membertest = member
+ 		  -->
+<mapper namespace="com.bigdataB.space.mapper.adminMapper">
+	<select id="listCate" resultType="spaceTypeDTO">
+		select * from space_type
+	</select> 
+	
+	<insert id="insertCate" parameterType="spaceTypeDTO">
+		insert into space_type values(seq_space_type.nextval, #{cate_nm}, #{cate_img}, 0)
+	</insert>
+	
+	<select id="listHost" resultType="hostListDTO">
+		select m.member_nm, m.member_email, m.member_pw, m.member_reg_dt, 
+				REGEXP_REPLACE(m.member_pno, '(02|.{3})(.+)(.{4})', '\1-\2-\3') member_pno, 
+				s.space_nm, s.space_comnum
+		from member m join space s on m.member_no = s.member_no where m.member_grade = 1
+	</select>
+	<select id="sortHost" parameterType="java.util.Map" resultType="hostListDTO">
+		select m.member_nm, m.member_email, m.member_pw, m.member_reg_dt, m.member_pno, s.space_nm , s.space_comnum
+			from member m join space s on m.member_no = s.member_no where m.member_grade = 1
+			order by ${column} ${sort}
+	</select>
+	
+	<select id="listGuest" parameterType="String" resultType="memberDTO">
+		select member_no, member_email, member_pw, member_nm, REGEXP_REPLACE(member_pno, '(02|.{3})(.+)(.{4})', '\1-\2-\3') member_pno, member_reg_dt
+		 from member where member_grade = 0
+	</select> 
+
+	<select id="sortGuest" parameterType="java.util.Map" resultType="memberDTO">
+		select member_no, member_email, member_pw, member_nm, member_pno, member_reg_dt
+		 from member where member_grade = 0
+			order by ${column} ${sort} 
+	</select>
+	
+	<select id="sortCate" parameterType="java.util.Map" resultType="spaceTypeDTO">
+		select cate_nm, cate_img
+			from space_type
+				order by cate_nm ${sort}
+	</select>
+	
+	<select id="listSpaceRoom" resultType="roomListDTO">
+		select m.member_nm, st.cate_nm, sr.room_nm, sr.room_price, sr.room_fit, sr.room_desc, sr.room_img1, sr.room_time, sr.room_date 
+		from space_room sr, space s, space_type st, member m 
+		where sr.space_no = s.space_no and m.member_no = s.member_no and st.cate_no = s.cate_no
+	</select>
+	
+	<select id="listSpaceRoomSort" parameterType="java.util.Map" resultType="roomListDTO">
+		select m.member_nm, st.cate_nm, sr.room_nm, sr.room_price, sr.room_fit, sr.room_desc, sr.room_img1, sr.room_time, sr.room_date 
+		from space_room sr, space s, space_type st, member m 
+		where sr.space_no = s.space_no and m.member_no = s.member_no and st.cate_no = s.cate_no
+		order by ${column} ${sort}
+	</select>
+		
+		
+	<!-- <select id="sortGuest" resultType="Object">
+        select * from member
+        <if test="pageable.sort.sorted">
+            <trim prefix="order by">
+                <foreach item="order" index="i" collection="pageable.sort" separator=", ">
+                    ${order.property} ${order.direction}
+                </foreach>
+            </trim>
+        </if>
+        limit ${pageable.size} offset ${pageable.page}*${pageable.size}
+    </select> -->
+		
+	<!-- 	
+	<select id="listHost" resultType="memberDTO">
+		select member_no, member_email, member_pw, member_nm, member_pno, member_reg_dt 
+		from member where member_grade = 1
+		
+		
+	</select> -->
+	
+	<!-- <select id="listSpaceRoom" resultType="spaceRoomDTO">
+		select * from space_room
+	</select> -->
+	
+	<select id="listReserve" resultType="reservedRoomDTO">
+		SELECT res.res_nm, sr.room_nm, res.use_dt, res.use_time,
+				REGEXP_REPLACE(s.space_pno, '(02|.{3})(.+)(.{4})', '\1-\2-\3') space_pno ,
+				REGEXP_REPLACE(res.res_pno, '(02|.{3})(.+)(.{4})', '\1-\2-\3') res_pno, 
+				res.res_email, res.res_personnel, res.res_st
+		from reserve res, space_room sr, member m, space s
+		where res.room_no = sr.room_no and s.space_no = sr.space_no and res.member_no = m.member_no
+	</select>
+</mapper>

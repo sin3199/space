@@ -1,0 +1,296 @@
+	//<!-- 정렬 아이콘 토글 클릭 할때마다 변경 -->
+
+	$("#member_reg_dt").on("click",function(){
+		$(this).toggleClass("uil-sort-amount-down uil-sort-amount-up");
+	});
+	$("#member_nm").on("click",function(){
+		$(this).toggleClass("uil-sort-amount-down uil-sort-amount-up");
+	});
+	$("#member_email").on("click",function(){
+		$(this).toggleClass("uil-sort-amount-down uil-sort-amount-up");
+	});
+	$("#member_pno").on("click",function(){
+		$(this).toggleClass("uil-sort-amount-down uil-sort-amount-up");
+	});
+	
+	$("#cate_nm").on("click",function(){
+		$(this).toggleClass("uil-sort-amount-down uil-sort-amount-up");
+	});
+
+	$("#host_nm").on("click",function(){
+		$(this).toggleClass("uil-sort-amount-down uil-sort-amount-up");
+	});
+	$("#host_email").on("click",function(){
+		$(this).toggleClass("uil-sort-amount-down uil-sort-amount-up");
+	});
+	$("#host_reg_dt").on("click",function(){
+		$(this).toggleClass("uil-sort-amount-down uil-sort-amount-up");
+	});
+	$("#host_pno").on("click",function(){
+		$(this).toggleClass("uil-sort-amount-down uil-sort-amount-up");
+	});
+	$("#space_nm").on("click",function(){
+		$(this).toggleClass("uil-sort-amount-down uil-sort-amount-up");
+	});
+	$("#space_comnum").on("click",function(){
+		$(this).toggleClass("uil-sort-amount-down uil-sort-amount-up");
+	});
+
+	
+
+ 
+
+	
+
+//<!-- ajax로 DB에 넣어줄 정렬데이터 넘겨주기 -->
+
+//<!--listHost 정렬 -->
+ 
+function sortHost(data){
+	$.ajax({
+		type:'POST'
+		, url:'host_sort.do'
+		,dataType: "json"
+		, data: data
+		, success: function(data) {
+		$(".table-body").empty();	
+		 	var str = '<TR>';
+			$.each(data, function(i){
+				 str += '<TD>' + this.member_nm + '</TD>';
+				 str += '<TD>' + this.member_email + '</TD>';
+				 str += '<TD>' + this.member_pw + '</TD>';
+				 str += '<TD>' + this.member_reg_dt + '</TD>';
+				 str += '<TD>' + this.member_pno + '</TD>';
+				 str += '<TD>' + this.space_nm + '</TD>';
+				 str += '<TD>' + this.space_comnum + '</TD>';
+				 str += '<TD>삭제</TD>';
+				 str += '</TR>';
+			});
+	    $(".table-body").append(str);
+   	 	}
+		,error: function(err) {
+			console.log("에러"+err);
+		}
+	})
+}
+
+
+
+//<!--listGuest 정렬-->
+function sortGuest(data){
+	$.ajax({
+		type:'POST'
+		, url:'guest_sort.do'
+		,dataType: "json"
+		, data: data
+		, success: function(data) {
+		$(".table-body").empty();	
+		 	var str = '<TR>';
+			$.each(data, function(i){
+				 str += '<TD>' + this.member_nm + '</TD><TD>' +this.member_email + '</TD><TD>'+ this.member_pw + '</TD><TD>' + this.member_reg_dt + '</TD><TD>' + this.member_pno + '</TD><TD>' + '삭제' + '</TD>';
+				 str += '</TR>';
+			});
+	    $(".table-body").append(str);
+   	 	}
+		,error: function(err) {
+			console.log("에러"+err);
+		}
+	})
+}
+
+//<!--listCate정렬-->
+function sortCate(data){
+	$.ajax({
+		type:'POST'
+		, url:'category_sort.do'
+		,dataType: "json"
+		, data: data
+		, success: function(data) {
+		$(".table-body").empty();	
+		 	var str = '<TR>';
+			$.each(data, function(i){
+				 str += '<TD>' + this.cate_nm + '</TD><TD><img src="${upPath}/' +this.cate_img + ' width="200" height="180"></TD><TD>' + '삭제' + '</TD>';
+				 str += '</TR>';
+			});
+	    $(".table-body").append(str);
+   	 	}
+		,error: function(err) {
+			console.log("에러"+err);
+		}
+	})
+}
+
+
+//<!-- 위의 함수를 이용해서 코드 정리 토글결과에 따라서 같이 변하게 적용-->
+
+//<!-- admin_listGuest 정렬 -->
+$("#member_email").on("click",function(){
+	if($("#member_email").hasClass("uil-sort-amount-down")){
+		var data = {
+				column : "member_email",
+				sort : "asc"
+		}
+	}else{
+		var data = {
+				column : "member_email",
+				sort : "desc"
+		}
+	}
+		sortGuest(data);
+});
+
+
+$("#member_nm").on("click",function(){
+	if($("#member_nm").hasClass("uil-sort-amount-down")){
+		var data = {
+				column : "member_nm",
+				sort : "asc"
+		}	
+	}else{
+		var data = {
+				column : "member_nm",
+				sort : "desc"
+		}			
+	}
+	sortGuest(data);
+});
+
+
+$("#member_pno").on("click",function(){
+	if($("#member_pno").hasClass("uil-sort-amount-down")){
+		var data = {
+				column : "member_pno",
+				sort : "asc"
+		}	
+	}else{
+		var data = {
+				column : "member_pno",
+				sort : "desc"
+		}			
+	}
+	sortGuest(data);
+});
+
+$("#member_reg_dt").on("click",function(){
+	if($("#member_reg_dt").hasClass("uil-sort-amount-down")){
+		var data = {
+				column : "member_reg_dt",
+				sort : "asc"
+		}		
+	} else{
+		var data = {
+				column : "member_reg_dt",
+				sort : "desc"
+		}				
+	}
+	sortGuest(data);
+});
+
+
+//<!--Category 정렬-->
+$("#cate_nm").on("click",function(){
+	if($("#cate_nm").hasClass("uil-sort-amount-down")){
+		var data = {
+				sort : "asc"
+		}		
+	} else{
+		var data = {
+				sort : "desc"
+		}				
+	}
+	sortCate(data);
+});
+
+//<!-- ListHost 정렬 -->
+
+$("#host_nm").on("click",function(){
+	if($("#host_nm").hasClass("uil-sort-amount-down")){
+		var data = {
+				column : "member_nm",
+				sort : "asc"
+		}		
+	} else{
+		var data = {
+				column : "member_nm",
+				sort : "desc"
+		}				
+	}
+	sortHost(data);
+});
+
+$("#host_email").on("click",function(){
+	if($("#host_email").hasClass("uil-sort-amount-down")){
+		var data = {
+				column : "member_email",
+				sort : "asc"
+		}		
+	} else{
+		var data = {
+				column : "member_email",
+				sort : "desc"
+		}				
+	}
+	sortHost(data);
+});
+
+$("#host_reg_dt").on("click",function(){
+	if($("#host_reg_dt").hasClass("uil-sort-amount-down")){
+		var data = {
+				column : "member_reg_dt",
+				sort : "asc"
+		}		
+	} else{
+		var data = {
+				column : "member_reg_dt",
+				sort : "desc"
+		}				
+	}
+	sortHost(data);
+});
+
+$("#host_pno").on("click",function(){
+	if($("#host_pno").hasClass("uil-sort-amount-down")){
+		var data = {
+				column : "member_pno",
+				sort : "asc"
+		}		
+	} else{
+		var data = {
+				column : "member_pno",
+				sort : "desc"
+		}				
+	}
+	sortHost(data);
+});
+
+$("#space_nm").on("click",function(){
+	if($("#space_nm").hasClass("uil-sort-amount-down")){
+		var data = {
+				column : "space_nm",
+				sort : "asc"
+		}		
+	} else{
+		var data = {
+				column : "space_nm",
+				sort : "desc"
+		}				
+	}
+	sortHost(data);
+});
+
+$("#space_comnum").on("click",function(){
+	if($("#space_comnum").hasClass("uil-sort-amount-down")){
+		var data = {
+				column : "space_comnum",
+				sort : "asc"
+		}		
+	} else{
+		var data = {
+				column : "space_comnum",
+				sort : "desc"
+		}				
+	}
+	sortHost(data);
+});
+
+

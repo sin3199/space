@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
+<log4j:configuration
+	xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<!-- Appenders -->
+	<appender name="console"
+		class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-5p: %c - %m%n" />
+		</layout>
+	</appender>
+
+	<!-- Application Loggers -->
+	<logger name="com.bigdataB.space">
+		<level value="info" />
+	</logger>
+
+	<!-- 3rdparty Loggers -->
+	<logger name="org.springframework.core">
+		<level value="info" />
+	</logger>
+
+	<logger name="org.springframework.beans">
+		<level value="info" />
+	</logger>
+
+	<logger name="org.springframework.context">
+		<level value="info" />
+	</logger>
+
+	<logger name="org.springframework.web">
+		<level value="info" />
+	</logger>
+
+	<!-- Query Loggers -->
+	<logger name="jdbc.sqlonly" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="console" />
+	</logger>
+
+	<logger name="jdbc.resultsettable" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="console" />
+	</logger>
+	
+	<!-- 로그 안보이게 한 리스트 -->
+	<logger name="jdbc.resultset" additivity="false">
+		<RegexFilter regex="(?s).*NOT_SQL_LOG.*" onMatch="DENY" onMismatch="NEUTRAL" useRawMsg="true" />
+	</logger>
+	
+	<logger name="jdbc.audit" additivity="false">
+		<RegexFilter regex="(?s).*NOT_SQL_LOG.*" onMatch="DENY" onMismatch="NEUTRAL" useRawMsg="true" />
+	</logger>
+	
+	<logger name="jdbc.connection" additivity="false">
+		<RegexFilter regex="(?s).*NOT_SQL_LOG.*" onMatch="DENY" onMismatch="NEUTRAL" useRawMsg="true" />
+	</logger>
+
+	<!-- Root Logger -->
+	<root>
+		<priority value="debug" />
+		<appender-ref ref="console" />
+	</root>
+
+</log4j:configuration>

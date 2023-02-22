@@ -1,0 +1,9 @@
+$(document).ready(function(){
+	$("#guest_reserve").ckick(function(){
+		let str = $("#")
+		if(str==null){
+			alert("로그인이후에 사용해주세요.");
+			location.replace("guestLogin.do");
+		}
+	})
+})

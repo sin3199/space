@@ -1,0 +1,63 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ include file="top.jsp"%>
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>게스트정보 화면</title>
+<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+
+	<!--  ------------------------------------------------------------------------------>
+	<div class="container">
+		<div class="row">
+		
+		<div class="col-md-3 mb-4">
+		<div class="col-md ">
+			<div class="list-group">
+				  <a href="guest_my_info.do" class="list-group-item list-group-item-action">내정보</a>
+				  <a href="guest_my_passwd_edit.do" class="list-group-item list-group-item-action">비밀번호 수정</a>
+				  <a href="guest_reservelist.do" class="list-group-item list-group-item-action">예약정보</a>
+			</div>
+		</div>
+		</div>
+		
+		<div class="col-md-9 ">
+		
+		<div class="col-md-8">
+		<form class="needs-validation" name="f" action="#" method="post" novalidate> <!-- guest_my_passwd_edit_ok.do -->
+		<h4 class="mb-3"><b>비밀번호 수정</b></h4>
+		<div class="mb-3">
+			<label for="member_pw"><b>현재 비밀번호</b></label>
+			<input type="password" class="form-control" id="member_pw"  >
+		</div>
+		
+		<div class="mb-3">
+			<label for="member_pw1"><b>수정 할 비밀번호</b></label>
+			<input type="password" class="form-control" id="member_pw1"  >
+		</div>
+		
+		<div class="mb-3">
+			<label for="member_pw2"><b>비밀번호 확인</b></label>
+			<input type="password" class="form-control" id="member_pw2" >
+		</div>
+		
+		<button type="submit" class="btn btn-primary btn-lg btn-block">수 정</button>
+		<hr>
+		
+		</form>
+		</div>
+		
+		
+		</div>
+		</div>
+	</div>
+
+	<script src="resources/js/jquery.js"></script>
+	<script src="resources/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

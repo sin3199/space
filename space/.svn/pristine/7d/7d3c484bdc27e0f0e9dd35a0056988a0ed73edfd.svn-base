@@ -1,0 +1,60 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ include file="top.jsp"%>
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>게스트 찜목록</title>
+    <link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+<body>
+<div class="container">
+<div class="row">
+		
+	<div class="col-md-3 mb-4">
+		<div class="col-md ">
+			<div class="list-group">
+				  <a href="guest_my_info.do" class="list-group-item list-group-item-action">내정보</a>
+				  <a href="guest_my_passwd_edit.do" class="list-group-item list-group-item-action">비밀번호 수정</a>
+				  <a href="guest_reservelist.do" class="list-group-item list-group-item-action">예약정보</a>
+				  <a href="guest_my_review.do" class="list-group-item list-group-item-action">내 리뷰</a>
+				  <a href="guest_dibs.do" class="list-group-item list-group-item-action">찜한 상품</a>
+			</div>
+		</div>
+		</div>
+
+<div class="col-md-9 ">		
+<div class="col-md-10 ">
+<h4 class="mb-3"><b>찜한 상품</b></h4>	
+<div class="card">
+  <h5 class="card-header"></h5>
+  <div class="card-body">
+  	<div class="row g-0">
+  		<div class="col-4 align-self-center p-0">
+  			<img class="img-fluid rounded" alt="방 이미지1" src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMjExMjZfNjUg%2FMDAxNjY5NDE0ODM0ODU3.UIoqiE47Z69_PjQVMkjLY8s_u9QAMdU65ck7tH1iXrcg.ezZc3hUti6Mj_uss8JhydIYM45OfrulgsdxbJyy3jiUg.JPEG.kkid65%2F%25B4%25D9%25BF%25EE%25B7%25CE%25B5%25E5%25C6%25C4%25C0%25CF%25A3%25DF20221126%25A3%25DF071008.jpg&type=a340" >
+  		</div>
+  		<div class="col-8">
+		    <h5 class="card-title"><b>찜한 방 명</b></h5>
+		    방 -> 방설명 블라블라블라<br>취소버튼 radio or checkBox 사용해서 별 찍기로 하기?
+  		</div>
+  	</div>
+  </div>
+  <div class="card-footer py-2">
+    <a href="#" class="btn btn-primary mx-1" style="width:130;">찜목록 취소</a>
+  </div>
+</div>
+
+	
+</div>
+</div>
+
+</div>
+</div>
+
+
+<script src="resources/js/jquery.js" ></script>
+<script src="resources/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

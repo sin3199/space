@@ -1,0 +1,42 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    <%@ include file="top.jsp"%>
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>게스트 카테고리 뷰</title>
+    <link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+   <c:if test="${not empty mode}">
+  <h1 align="center">${mode.cate_nm}상세 보기</h1>
+  </c:if>
+<div class="container">
+	<c:if test="${empty getSpace}">
+	등록된 건물이 없습니다.
+	</c:if>
+	<div class="row">
+	<c:forEach var="dto" items="${getSpace}">
+	 <div class="col-lg-4 col-md-6">
+    	   <div class="card" style="width: auto;">
+				 <a href="guest_spaceview.do?sn=${dto.space_no}">
+					 <img src="resources/img/guest/room-1.jpg" class="card-img-top" alt="...">
+		 			 <div class="card-body">
+				    <h5 class="card-title">${dto.space_nm}</h5>
+				    <p class="card-text">${dto.space_addr}</p>
+				    <button type="button" class="btn btn-primary">Go somewhere</button>
+				  </div>
+				  </a>
+			</div>
+    </div>
+  
+    </c:forEach>
+      </div>
+    </div>
+<script src="resources/js/jquery.js" ></script>
+<script src="resources/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

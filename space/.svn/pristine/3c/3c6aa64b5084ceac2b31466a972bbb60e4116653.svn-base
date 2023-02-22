@@ -1,0 +1,52 @@
+package com.bigdataB.space.service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.bigdataB.space.dto.ReserveDTO;
+import com.bigdataB.space.dto.SpaceDTO;
+import com.bigdataB.space.dto.SpaceRoomDTO;
+import com.bigdataB.space.dto.SpaceTypeDTO;
+
+
+@Service
+public class GuestMapper {
+
+	@Autowired
+	private  SqlSession sqlSession;
+	
+	public int insertRrserve(Map<String, String>map){
+		return sqlSession.insert("insertReserve",map);
+	}
+
+	public List<SpaceRoomDTO> listCategory(String q){
+		System.out.println("q = "+ q);
+		return sqlSession.selectList("g_listSpace",q);
+	}
+
+	public List<SpaceRoomDTO> listSapceRoom(int cate_no){
+		return sqlSession.selectList("g_listCate",cate_no);
+	}
+	public SpaceTypeDTO getCate(int cate_no){
+		return sqlSession.selectOne("g_getCate",cate_no);
+	}
+	public List<SpaceTypeDTO> ListSpaceType(){
+		return sqlSession.selectList("g_ListSpaceType");
+		
+	}
+	public SpaceDTO getSpace(int space_no) {
+		return sqlSession.selectOne("g_getSpace",space_no);
+	}
+	
+	public List<SpaceRoomDTO> getSpaceRoom(int space_no) {
+		return sqlSession.selectList("g_getSpaceRoom",space_no);
+	}
+	public int insertReserve(ReserveDTO dto) {
+		return sqlSession.insert("insertReserve",dto);
+	}
+
+}

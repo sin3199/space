@@ -1,0 +1,162 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+<%@ include file="../host_top.jsp"%>
+
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>www.space.com/room_input</title>
+<link href="resources/bootstrap/css/bootstrap.css" rel="stylesheet">
+<style>
+.cay {
+	outline: none !important;
+}
+</style>
+</head>
+<body>
+	<div class="container">
+
+		<div class="py-5 text-center">
+			<h2>방 등록 페이지</h2>
+			<p class="lead">Below is an example form built entirely with
+				Bootstrap’s form controls. Each required form group has a validation
+				state that can be triggered by attempting to submit the form without
+				completing it.</p>
+			<br>
+			<br>
+			<hr class="mb-4">
+		</div>
+
+		<form name="f" action="room_input.do" method="post"
+			onsubmit="return checkRoom()" enctype="multipart/form-data">
+			<input type="hidden" name="space_no" value="${space_nono}" />
+
+			<div class="mb-3">
+				<label for="nm">방 이름* <span class="text-muted">(Room
+						Name)</span></label> <input type="text" class="form-control" name="room_nm">
+				<div class="invalid-feedback">Please enter a valid content for
+					shipping updates.</div>
+			</div>
+
+			<div class="mb-3">
+				<label for="price">가격*(요금은 시간으로 책정됩니다.)<span
+					class="text-muted">(Price)</span></label> <input type="text"
+					class="form-control" name="room_price">
+				<div class="invalid-feedback">Please enter a valid content for
+					shipping updates.</div>
+			</div>
+
+			<div class="mb-3">
+				<label for="capacity">수용인원* <span class="text-muted">(Capacity)</span></label>
+				<input type="text" class="form-control" name="room_fit">
+				<div class="invalid-feedback">Please enter a valid content for
+					shipping updates.</div>
+			</div>
+
+			<div class="mb-3">
+				<label for="explanation">방 설명* <span class="text-muted">(Explanation)</span></label>
+				<textarea class="form-control" name="room_desc" rows="6"></textarea>
+				<div class="invalid-feedback">Please enter a valid content for
+					shipping updates.</div>
+			</div>
+
+			<div class="mb-3">
+				<label for="image1">대표이미지 <span class="text-muted">(Representative
+						Image)</span></label> <input type="file" class="form-control" name="room_img1">
+				<div class="invalid-feedback">Please enter a valid content for
+					shipping updates.</div>
+			</div>
+
+			<div class="mb-3">
+				<label for="image2">이미지1<span class="text-muted">(Image.NO.1)</span></label>
+				<input type="file" class="form-control" name="room_img2">
+				<div class="invalid-feedback">Please enter a valid content for
+					shipping updates.</div>
+			</div>
+
+			<div class="mb-3">
+				<label for="image3">이미지2 <span class="text-muted">(Image.NO.2)</span></label>
+				<input type="file" class="form-control" name="room_img3">
+				<div class="invalid-feedback">Please enter a valid content for
+					shipping updates.</div>
+			</div>
+
+			<div class="mb-3">
+				<label for="image4">이미지3 <span class="text-muted">(Image.NO.3)</span></label>
+				<input type="file" class="form-control" name="room_img4">
+				<div class="invalid-feedback">Please enter a valid content for
+					shipping updates.</div>
+			</div>
+
+			<div class="mb-3">
+				<label for="image5">이미지4 <span class="text-muted">(Image.NO.4)</span></label>
+				<input type="file" class="form-control" name="room_img5">
+				<div class="invalid-feedback">Please enter a valid content for
+					shipping updates.</div>
+			</div>
+
+
+			<div class="form-row">
+				<div class="mb-3 col-md-6">
+					<label for="timeS">사용가능 시작일 <span class="text-muted">(Start
+							time to use a room)</span></label> <input type="datetime-local"
+						class="form-control" name="room_time_s">
+					<div class="invalid-feedback">Please enter a valid content
+						for shipping updates.</div>
+				</div>
+
+				<div class="mb-3 col-md-6">
+					<label for="timeE">사용가능 종료일<span class="text-muted">(End
+							time to use a room)</span></label> <input type="datetime-local"
+						class="form-control" name="room_time_e">
+					<div class="invalid-feedback">Please enter a valid content
+						for shipping updates.</div>
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="mb-3">
+					<label for="offDay">휴무일 선택<span class="text-muted">(Off
+							day)</span></label><br>
+					<button type="button" name="b1" class="day btn btn-secondary"
+						value="1">일</button>
+					<button type="button" name="b2" class="day btn btn-secondary"
+						value="1">월</button>
+					<button type="button" name="b3" class="day btn btn-secondary"
+						value="1">화</button>
+					<button type="button" name="b4" class="day btn btn-secondary"
+						value="1">수</button>
+					<button type="button" name="b5" class="day btn btn-secondary"
+						value="1">목</button>
+					<button type="button" name="b6" class="day btn btn-secondary"
+						value="1">금</button>
+					<button type="button" name="b7" class="day btn btn-secondary"
+						value="1">토</button>
+					<input type="hidden" id="room_week" name="room_week">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col text-center">
+					<div class="btn-group" role="group" aria-label="button">
+						<input type="submit" class="btn btn-dark" value="방 등록"> <input
+							type="reset" class="btn btn-secondary" value="취소" /> <input
+							type="button" class="btn btn-secondary" value="방 목록보기"
+							onclick="window.location='room_list.do'">
+					</div>
+				</div>
+			</div>
+			
+
+		</form>
+	</div>
+
+
+	<script src="resources/js/jquery.js"></script>
+	<script type="text/javascript"
+		src="resources/bootstrap/js/bootstrap.bundle.js"></script>
+
+</body>
+</html>
+<script src="resources/js/main.js"></script>
+<%@ include file="../host_bottom.jsp"%>

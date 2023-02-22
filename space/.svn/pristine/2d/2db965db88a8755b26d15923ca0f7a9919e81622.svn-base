@@ -1,0 +1,44 @@
+package com.bigdataB.space.service;
+
+import java.util.*;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.bigdataB.space.dto.SpaceDTO;
+
+@Service
+public class HostBuildingMapper {
+
+	@Autowired
+	private SqlSession sqlSession;
+
+	public List<SpaceDTO> listHostBuilding(int start, int end) {
+		Map<String, Integer> map = new Hashtable<String, Integer>();
+		map.put("start", start);
+		map.put("end", end);
+		return sqlSession.selectList("listHostBuilding", map);
+	}
+
+	public int insertHostBuilding(SpaceDTO sdto) {
+		return sqlSession.insert("insertHostBuilding", sdto);
+	}
+
+	public int deleteHostBuilding(int b_no) {
+		return sqlSession.delete("deleteHostBuilding", b_no);
+	}
+
+	public int updateHostBuilding(SpaceDTO sdto) {
+		return sqlSession.update("updateHostBuilding", sdto);
+	}
+
+	public SpaceDTO getHostBuilding(int space_no) {
+		return sqlSession.selectOne("getHostBuilding", space_no);
+	}
+
+	public int getHostBuildingCount() {
+		return sqlSession.selectOne("getHostBuildingCount");
+	}
+
+}

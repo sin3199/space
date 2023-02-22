@@ -1,0 +1,371 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="com.bigdataB.space.dto.MemberDTO" %>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.101.0">
+    <title>1122334455</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.6/examples/product/">
+
+    
+
+    <!-- Bootstrap core CSS servelt-context.xml 참고-->
+	<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+
+	<!-- sql mapper 마지막 2개항목은 외래키  왜 페이지 이름 add 로 했냐 진짜 이해안감 자다가 했음....? -->
+
+
+
+	<% 
+		// Session GET! PIKACHU
+		HttpSession session_BuildingList = request.getSession();
+		if((MemberDTO)session_BuildingList.getAttribute("memberdto") == null){
+			session_BuildingList.setAttribute("msg", "Access Denied");
+			session_BuildingList.setAttribute("url", "hostLogin.do");
+			response.sendRedirect("hostLogin.do");
+		} else {
+			MemberDTO memberdto = (MemberDTO)session_BuildingList.getAttribute("memberdto");
+			
+			if(memberdto.getMember_grade() != 1){
+				response.sendRedirect("hostLogin.do");
+				
+			}
+		}
+
+	%>
+	
+	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	<script>
+		window.onload = function(){
+		    document.getElementById("address_kakao").addEventListener("click", function(){ //주소입력칸을 클릭하면
+		        //카카오 지도 발생
+		        new daum.Postcode({
+		            oncomplete: function(data) { //선택시 입력값 세팅
+		                document.getElementById("address_kakao").value = data.address; // 주소 넣기
+		                document.querySelector("input[name=address_detail]").focus(); //상세입력 포커싱
+		            }
+		        }).open();
+		    });
+		}
+	</script>
+	
+	<!-- number arrow del -->
+	<style type="text/css">
+		input[type='number']::-webkit-outer-spin-button,
+		input[type='number']::-webkit-inner-spin-button {
+			  -webkit-appearance: none;
+			  margin: 0;
+		}
+	</style>
+    
+  </head>
+  <body>
+    
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+  <a class="navbar-brand" href="/space/host_home.do">Space Platform</a>
+  
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a class="nav-link disabled">건물등록</a>
+    </div>
+  </div>
+
+  	<form class="form-inline" action="host_Logout.do">
+	  	<button class="btn btn-outline-success my-2 my-sm-0" type="submit">아웃</button>
+  	</form>
+
+
+
+
+
+</nav>
+
+<!-- center// -->
+<div class="container">
+
+	<div class="py-5 text-center">
+    <h2>공간 정보를 입력해주세요.</h2>
+    <p class="lead">Below is an example form built entirely with Bootstrap’s form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.</p>
+  </div>
+  <hr class="mb-4">
+  <form class="needs-validation"  name="f" action="host_buildingAdd.do" method="post" enctype="multipart/form-data">
+  <input type="hidden" name="member_no" value="${memberdto.getMember_no()}"/>
+  <input type="hidden" name="cate_no" value="44"/>
+  
+  
+  <div class="form-row">
+	  <div class="mb-3 col-md-6">
+	    <label for="email">건물명* <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" name="space_nm" placeholder="">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3 col-md-6">
+	    <label for="email">건물 부제목* <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" name="space_sub_nm" placeholder="">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">건물 소개* <span class="text-muted">(Optional)</span></label>
+	    <textarea class="form-control" name="space_intro" placeholder=""></textarea>
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">시설안내* <span class="text-muted">(Optional)</span></label>
+	    <textarea class="form-control" name="space_guide" placeholder=""></textarea>
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">주의사항* <span class="text-muted">(Optional)</span></label>
+	    <textarea class="form-control" name="precaution" placeholder=""></textarea>
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">건물 주소* <span class="text-muted">(Optional)</span></label>
+	    <input type="search" id="address_kakao" class="form-control" name="space_addr1" placeholder="" readonly>
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">상세 주소* <span class="text-muted">(Optional)</span></label>
+	     <input type="text" class="form-control" name="space_addr2" placeholder="">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+
+		    
+	  <label for="email">전화번호* <span class="text-muted">(Phone number)</span></label>
+	  <div class="form-row">
+	  &nbsp
+		  <div class="mb-3">
+		    <select class="form-control" name="space_pno1">
+			    <option value="010">010</option>
+			    <option value="011">011</option>
+			    <option value="012">012</option>
+			    <option value="013">013</option>
+			    <option value="015">015</option>
+			  </select>  
+		  </div>
+		  
+		  <div class="mb-3">
+		    <h3>&nbsp-&nbsp</h3>
+		  </div>
+
+		  <div class="mb-3">
+		    <input type="number" class="form-control" name="space_pno2" min="0" max="9999" placeholder=""/>
+		  </div>
+		  
+		  <div class="mb-3">
+		    <h3>&nbsp-&nbsp</h3>
+		  </div>
+		  
+		  <div class="mb-3">
+		    <input type="number" class="form-control" name="space_pno3" min="0" max="9999" placeholder=""/>
+		  </div>
+	  </div>
+	  
+	  <!-- 안예쁨 is not butty -->
+	  <label for="email">영업시간* <span class="text-muted">(Optional)</span></label>
+	  
+	  <div class="form-row">&nbsp
+		  <div class="input-group-prepend" name="space_time1">
+		    <div class="input-group-text">
+		      <input type="checkbox" value="1-" aria-label="Checkbox for following text input">
+		      &nbsp월
+		    </div>&nbsp
+		    <div class="input-group-text">
+		      <input type="checkbox" value="2-" aria-label="Checkbox for following text input">
+		      &nbsp화
+		    </div>&nbsp
+		    <div class="input-group-text">
+		      <input type="checkbox" value="3-" aria-label="Checkbox for following text input">
+		      &nbsp수
+		    </div>&nbsp
+		    <div class="input-group-text">
+		      <input type="checkbox" value="4-" aria-label="Checkbox for following text input">
+		      &nbsp목
+		    </div>&nbsp
+		    <div class="input-group-text">
+		      <input type="checkbox" value="5-" aria-label="Checkbox for following text input">
+		      &nbsp금
+		    </div>&nbsp
+		    <div class="input-group-text">
+		      <input type="checkbox" value="6-" aria-label="Checkbox for following text input">
+		      &nbsp토
+		    </div>&nbsp
+		    <div class="input-group-text">
+		      <input type="checkbox" value="7-" aria-label="Checkbox for following text input">
+		      &nbsp일
+		    </div>
+		  </div>
+	  </div>
+	  
+	  <div class="form-row">
+	  &nbsp
+		  <div class="mb-3">
+		    <input type="time" class="form-control" name="space_time2" placeholder="">
+		  </div>
+		  
+		  <div class="mb-3">
+		    <h3>&nbsp~&nbsp</h3>
+		  </div>
+		  
+		  <div class="mb-3">
+		    <input type="time" class="form-control" name="space_time3" placeholder="">
+		  </div>
+	  </div>
+	 
+	  
+	  <div class="mb-3">
+	    <label for="email">휴무일* <span class="text-muted">(Optional)</span></label>&nbsp 
+		    <select class="form-control" name="space_closed_dt">
+			    <option value="1">Weekly</option>
+			    <option value="2">Monthly</option>
+			    <option value="3">Biweekly</option>
+			    <option value="4">Bimonthly</option>
+			  </select>  
+	    
+		    <div class="form-row">&nbsp 
+			  <div class="input-group-prepend" name="space_time1">
+			    <div class="input-group-text">
+			      <input type="checkbox" value="1-" aria-label="Checkbox for following text input">
+			      &nbsp월
+			    </div>&nbsp
+			    <div class="input-group-text">
+			      <input type="checkbox" value="2-" aria-label="Checkbox for following text input">
+			      &nbsp화
+			    </div>&nbsp
+			    <div class="input-group-text">
+			      <input type="checkbox" value="3-" aria-label="Checkbox for following text input">
+			      &nbsp수
+			    </div>&nbsp
+			    <div class="input-group-text">
+			      <input type="checkbox" value="4-" aria-label="Checkbox for following text input">
+			      &nbsp목
+			    </div>&nbsp
+			    <div class="input-group-text">
+			      <input type="checkbox" value="5-" aria-label="Checkbox for following text input">
+			      &nbsp금
+			    </div>&nbsp
+			    <div class="input-group-text">
+			      <input type="checkbox" value="6-" aria-label="Checkbox for following text input">
+			      &nbsp토
+			    </div>&nbsp
+			    <div class="input-group-text">
+			      <input type="checkbox" value="7-" aria-label="Checkbox for following text input">
+			      &nbsp일
+			    </div>
+			  </div>
+		  </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">사업자 등록번호* <span class="text-muted">(-빼고입력)</span></label>
+	    <input type="text" class="form-control" name="space_comnum" placeholder="3332255555">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  <br>
+  	<hr class="mb-4">
+  	
+  	<button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+  </form>
+</div>
+
+<br><br>
+
+<!-- center// -->
+
+<footer class="container py-5">
+  <div class="row">
+    <div class="col-12 col-md">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="d-block mb-2" role="img" viewBox="0 0 24 24" focusable="false"><title>Product</title><circle cx="12" cy="12" r="10"/><path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83m13.79-4l-5.74 9.94"/></svg>
+      <small class="d-block mb-3 text-muted">&copy; Copyright (c) 이젠컴퓨터아카데미(노원). All rights reserved.</small>
+    </div>
+    <div class="col-6 col-md">
+      <h5>Features</h5>
+      <ul class="list-unstyled text-small">
+        <li><a class="text-muted" href="#">Cool stuff</a></li>
+        <li><a class="text-muted" href="#">Random feature</a></li>
+        <li><a class="text-muted" href="#">Team feature</a></li>
+        <li><a class="text-muted" href="#">Stuff for developers</a></li>
+        <li><a class="text-muted" href="#">Another one</a></li>
+        <li><a class="text-muted" href="#">Last time</a></li>
+      </ul>
+    </div>
+    <div class="col-6 col-md">
+      <h5>Resources</h5>
+      <ul class="list-unstyled text-small">
+        <li><a class="text-muted" href="#">Resource</a></li>
+        <li><a class="text-muted" href="#">Resource name</a></li>
+        <li><a class="text-muted" href="#">Another resource</a></li>
+        <li><a class="text-muted" href="#">Final resource</a></li>
+      </ul>
+    </div>
+    <div class="col-6 col-md">
+      <h5>Resources</h5>
+      <ul class="list-unstyled text-small">
+        <li><a class="text-muted" href="#">Business</a></li>
+        <li><a class="text-muted" href="#">Education</a></li>
+        <li><a class="text-muted" href="#">Government</a></li>
+        <li><a class="text-muted" href="#">Gaming</a></li>
+      </ul>
+    </div>
+    <div class="col-6 col-md">
+      <h5>About</h5>
+      <ul class="list-unstyled text-small">
+        <li><a class="text-muted" href="#">Team</a></li>
+        <li><a class="text-muted" href="#">Locations</a></li>
+        <li><a class="text-muted" href="#">Privacy</a></li>
+        <li><a class="text-muted" href="#">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+      <script>window.jQuery || document.write('<script src="/docs/4.6/assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="/docs/4.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+      <script>window.jQuery || document.write('<script src="/docs/4.6/assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="/docs/4.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+
+      
+        <script src="form-validation.js"></script>
+      <!-- https://getbootstrap.com/docs/4.6/examples/checkout/ 보고하기 -->
+  </body>
+</html>

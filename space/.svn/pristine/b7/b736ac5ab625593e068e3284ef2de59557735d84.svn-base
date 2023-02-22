@@ -1,0 +1,20 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ include file="top.jsp" %>
+
+	<div class="dash-content">
+		<form class="insert-form" name="f" action="admin_insertCategory.do" method="post"
+					enctype="multipart/form-data">
+		<div class="col-md-3">
+			카테고리 명	<input class="form-control" type="text" placeholder="카테고리명" name="cate_nm"><br>
+		</div>
+		<div class="mb-3 col-md-3">
+  			<label for="formFile" class="form-label">카테고리 아이콘</label>
+  			<input class="form-control" type="file" id="formFile" name="cate_img">
+		</div><br>	
+			<input type="submit" value="등록">
+			<input type="reset" value="취소">
+		</form>
+	</div>
+	
+<%@ include file="bottom.jsp"%>

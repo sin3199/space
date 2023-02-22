@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="com.bigdataB.space.mapper.guestMapper">
+
+	<!-- 검색기 -->
+	<select id="g_listSpace" parameterType="String" resultType="SpaceRoomDTO">
+	select *from space_room sr join space s on sr.space_no=s.space_no JOIN SPACE_TYPE st ON s.CATE_NO =st.CATE_NO
+	WHERE room_no LIKE '%'||#{q}||'%' or ROOM_DESC LIKE '%'||#{q}||'%' or SPACE_SUB_NM LIKE '%'||#{q}||'%' OR SPACE_INTRO LIKE '%'||#{q}||'%' OR SPACE_ADDR LIKE '%'||#{q}||'%' OR cate_nm LIKE '%'||#{q}||'%'
+
+	</select>
+	
+	<!-- 카테고리를 선택해서 들어올 때의 spaceRoom 목록 -->
+	<select id="g_listCate" parameterType="Integer" resultType="SpaceRoomDTO">
+		select *from space_room sr join space s on sr.space_no=s.space_no
+		WHERE cate_no =#{cate_no}
+	</select>
+	
+	<!-- 카테고리를 선택해서 들어올 때의 카테고리 이름 노출. -->
+	<select id="g_getCate" parameterType="Integer" resultType="SpaceTypeDTO">
+		select * from space_type where cate_no = #{cate_no}
+	</select>
+
+	<insert id="insertReserve" parameterType="ReserveDTO">
+		insert into reserve values(#{id}, #{name}, #{cname})
+	</insert>
+	
+	<!-- 카테고리 목록 -->
+	<select id="g_ListSpaceType" resultType="spaceTypeDTO">
+		select * from space_type
+	</select>	
+	<!-- categoryview에서 건물을 선택했을 때의 방 정보 -->
+	<select id="g_getSpaceRoom" parameterType="Integer" resultType="SpaceRoomDTO">
+		select * from space_room where room_no = #{room_no}
+	</select>
+	
+	<insert id="AddLike" parameterType="java.util.Map">
+		INSERT INTO SPACE_DIBS (ROOM_NO, MEMBER_NO) VALUES(${room_no}, ${member_no})
+<!-- 	
+		insert into space_dibs values(${room_no},${member_no}) -->
+	</insert>
+	
+	<delete id="RemoveLike" parameterType="java.util.Map">
+		delete from space_dibs where room_no=${room_no} and member_no = ${member_no}
+	</delete>
+	
+	<select id="findLike" parameterType="java.util.Map" resultType="SpaceDibsDTO">
+		select *from space_dibs where room_no=${room_no} and member_no = ${member_no}
+	</select>
+	
+	<select id="g_getSpace" parameterType="Integer" resultType="SpaceDTO">
+		select * from space where space_no = #{space_no}
+	</select>
+
+</mapper> 	
+

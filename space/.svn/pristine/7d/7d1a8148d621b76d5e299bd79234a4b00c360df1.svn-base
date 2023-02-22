@@ -1,0 +1,95 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ include file="top.jsp"%>
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>게스트 비밀번호 변경</title>
+<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+
+	<!--  ------------------------------------------------------------------------------>
+	<div class="container">
+		<div class="row">
+		
+		<div class="col-md-3 mb-4">
+		<div class="col-md ">
+			<div class="list-group">
+				  <a href="guest_my_info.do" class="list-group-item list-group-item-action">내정보</a>
+				  <a href="guest_my_passwd_edit.do" class="list-group-item list-group-item-action">비밀번호 수정</a>
+				  <a href="guest_reservelist.do" class="list-group-item list-group-item-action">예약정보</a>
+				  <a href="guest_my_review.do" class="list-group-item list-group-item-action">내 리뷰</a>
+				  <a href="guest_dibs.do" class="list-group-item list-group-item-action">찜한 상품</a>
+			</div>
+		</div>
+		</div>
+		
+		<div class="col-md-9 ">
+		
+		<div class="col-md-8">
+		
+		<form class="needs-validation" name="f" action="#" method="post" novalidate> <!-- guest_my_passwd_edit_ok.do -->
+		<h4 class="mb-3"><b>비밀번호 수정</b></h4>
+		<div class="mb-3">
+			<label for="member_pw"><b>현재 비밀번호</b></label>
+			<input type="password" class="form-control" id="member_pw" placeholder="현재 비밀번호 입력" required>
+			<div class="invalid-feedback">
+		        현재 비밀번호를 입력해주세요
+	     	</div>
+		</div>
+		
+		<div class="mb-3">
+			<label for="member_pw1"><b>수정 할 비밀번호</b></label>
+			<input type="password" class="form-control" id="member_pw1" placeholder="현재 비밀번호 입력" required  >
+			<div class="invalid-feedback">
+		        수정 할 비밀번호를 입력해주세요.
+	     	</div>
+		</div>
+		
+		<div class="mb-3">
+			<label for="member_pw2"><b>비밀번호 재확인</b></label>
+			<input type="password" class="form-control" id="member_pw2" placeholder="현재 비밀번호 입력" required >
+			<div class="invalid-feedback">
+		        수정 할 비밀번호를 재입력해주세요.
+	     	</div>
+		</div>
+		
+		<button type="submit" class="btn btn-primary btn-lg btn-block">수 정</button>
+		<hr>
+		
+		</form>
+		</div>
+		
+		
+		</div>
+		</div>
+	</div>
+<!-- Validation -->	
+<script>
+// Example starter JavaScript for disabling form submissions if there are invalid fields
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+</script>
+<script src="resources/js/jquery.js"></script>
+<script src="resources/bootstrap/js/bootstrap.bundle.min.js"></script>	
+</body>
+</html>

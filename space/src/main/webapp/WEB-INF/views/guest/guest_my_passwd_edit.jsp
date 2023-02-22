@@ -1,0 +1,74 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ include file="top.jsp"%>
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="resources/js/guest2.js"></script>
+<title>게스트 비밀번호 변경</title>
+</head>
+<body>
+
+
+	<!--  ------------------------------------------------------------------------------>
+	<div class="container">
+		<div class="row">
+		
+		<div class="col-md-3 mb-4">
+		<div class="col-md ">
+			<div class="list-group">
+				  <a href="guest_my_info.do" class="list-group-item list-group-item-action">내 정보</a>
+				  <a href="guest_my_passwd_edit.do" class="list-group-item list-group-item-action">비밀번호 수정</a>
+				  <a href="guest_reservelist.do" class="list-group-item list-group-item-action">예약리스트</a>
+				  <a href="guest_my_review.do" class="list-group-item list-group-item-action">내 리뷰</a>
+				  <a href="guest_dibs.do" class="list-group-item list-group-item-action">찜 목록</a>
+			</div>
+		</div>
+		</div>
+		
+		<div class="col-md-9 ">
+		
+		<div class="col-md-8">
+		
+		<form class="needs-validation" name="f" novalidate> 
+		<h4 class="mb-3"><b>비밀번호 수정</b></h4>
+		<div class="mb-3">
+			<label for="current_pw"><b>현재 비밀번호</b></label>
+			<input type="password" class="form-control" name="current_pw" id="current_pw" placeholder="현재 비밀번호 입력" required>
+			<div class="invalid-feedback">
+		        현재 비밀번호를 입력해주세요
+	     	</div>
+		</div>
+		
+		<div class="mb-3">
+			<label for="member_pw"><b>수정 할 비밀번호</b></label>
+			<input type="password" class="form-control" name="member_pw" id="member_pw" placeholder="수정 할 비밀번호 입력" required  >
+			<div class="invalid-feedback">
+		        수정 할 비밀번호를 입력해주세요.
+	     	</div>
+		</div>
+		
+		<div class="mb-3">
+			<label for="re_pw"><b>비밀번호 재확인</b></label>
+			<input type="password" class="form-control" name="re_pw" id="re_pw" placeholder="비밀번호 확인" required >
+			<div class="invalid-feedback">
+		        수정 할 비밀번호를 재입력해주세요.
+	     	</div>
+		</div>
+		
+		<button type="button" id="pwEdit" class="btn btn-info btn-lg btn-block">수 정</button>
+		<hr>
+		
+		</form>
+		</div>
+		
+		
+		</div>
+		</div>
+	</div>
+
+</body>
+<%@ include file="bottom.jsp"%>
+</html>

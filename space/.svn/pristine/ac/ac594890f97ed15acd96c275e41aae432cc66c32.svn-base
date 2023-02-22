@@ -1,0 +1,308 @@
+package com.bigdataB.space;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import com.bigdataB.space.dto.MemberDTO;
+import com.bigdataB.space.dto.ReserveDTO;
+import com.bigdataB.space.dto.ReserveListDTO;
+import com.bigdataB.space.dto.ReviewDTO;
+import com.bigdataB.space.dto.SpaceDTO;
+import com.bigdataB.space.dto.SpaceDibsDTO;
+import com.bigdataB.space.dto.SpaceRoomDTO;
+import com.bigdataB.space.dto.SpaceTypeDTO;
+import com.bigdataB.space.service.GuestMapper;
+
+
+/**
+ * Handles requests for the application home page.
+ */
+@Controller
+public class GuestController {
+
+	@Autowired
+	GuestMapper guestMapper;
+
+	@RequestMapping(value = "index.do")
+	public String main() {
+
+		return "main";
+	}
+	//guest메인화면
+	@RequestMapping(value = "/guest_main.do")
+	public String guest_main(HttpServletRequest req,HttpSession session) {
+		
+		if ((MemberDTO) session.getAttribute("memberdto") == null) {
+		} else if (((MemberDTO) session.getAttribute("memberdto")).getMember_grade() != 0) {
+			session.invalidate();
+		}
+		List<SpaceTypeDTO> list = guestMapper.ListSpaceType();
+		req.setAttribute("listSpaceType", list);
+		req.removeAttribute("searchString");
+		return "guest/guest_main";
+	}
+	
+	//내 정보 이동
+	@RequestMapping(value = "guest_my_info.do")
+	public String guest_my_info() {
+		return "guest/guest_my_info";
+	}
+	
+	//비밀번호 변경 이동
+	@RequestMapping(value="guest_my_passwd_edit.do")
+	public String guest_my_passwd_edit() {
+		return "guest/guest_my_passwd_edit";
+	}
+	
+	//리뷰쓰기 페이지 이동
+	@RequestMapping(value="guest_review_write.do")
+	public String guest_review_write() {
+		return "guest/guest_review_write";
+	}
+	//리뷰쓰기 OK 페이지 이동
+	@RequestMapping(value="guest_review_write_ok.do" )
+	public String guest_review_write_ok(HttpServletRequest req, @ModelAttribute ReviewDTO dto, BindingResult result ) {
+		if (result.hasErrors()) {
+			dto.setRes_img("");
+		}
+		MultipartHttpServletRequest mr = (MultipartHttpServletRequest)req;
+		MultipartFile mf = mr.getFile("res_img");
+		String filename = mf.getOriginalFilename();
+		HttpSession session = req.getSession();
+		String upPath = session.getServletContext().getRealPath("/resources/img");
+		File file = new File(upPath, filename);
+		try {
+			mf.transferTo(file);
+		}catch(IOException e) {
+			e.printStackTrace();
+			req.setAttribute("msg", "이미지를 업로드시 오류발생!! 다시 입력해 주세요");
+			req.setAttribute("url", "guest_reservelist.do");
+			return "/message";
+		}
+		
+		dto.setRes_img(filename);
+		
+		System.out.println("res_like = " + dto.getRes_like());
+		System.out.println("res_no = " + dto.getRes_no());
+		System.out.println("rev_content = " + dto.getRev_content());
+		System.out.println("res_img = " + dto.getRes_img());
+		int res = guestMapper.reviewInsert(dto);
+		if (res > 0) {
+			req.setAttribute("msg", "리뷰 등록 완료!! 내 리뷰 페이지로 이동");
+			req.setAttribute("url", "guest_my_review.do");
+		} else {
+			req.setAttribute("msg", "리뷰 등록 실패!! 내 예약리스트로 이동");
+			req.setAttribute("url", "guest_reservelist.do");
+		}
+		return "/message";
+	}
+	//내 리뷰 페이지 이동
+	@RequestMapping(value="guest_my_review.do")
+	public String  guest_my_review() {
+		return "guest/guest_my_review";
+	}
+
+	//host페이지 이동
+	@RequestMapping(value = "host_home.do")
+	public String HostHome() {
+		return "host/host_home";
+	}
+	//login페이지 이동
+	@RequestMapping(value = "g_guestLogin.do", method=RequestMethod.GET)
+	public String guest_Login() {
+		return "login/guestLogin";
+	}
+
+	// guest_main에서 카테고리를 선택해서 넘어올 때
+	@RequestMapping(value = "guest_categoryView.do")
+	public String guest_categoryView(HttpServletRequest req, @RequestParam int cate_no) {
+		List<SpaceRoomDTO> list = guestMapper.listSapceRoom(cate_no);
+		SpaceTypeDTO stdto = guestMapper.getCate(cate_no);
+		req.setAttribute("getSpaceRoom", list);
+		req.setAttribute("mode", stdto);
+		return "guest/guest_categoryView";
+	}
+	// top의 search를 통해서 넘어올 떄	
+	 @RequestMapping(value="search.do",method=RequestMethod.POST)
+	 public String searchList(HttpServletRequest req,@RequestParam String searchString) {
+		 String q = searchString;
+		 List<SpaceRoomDTO> list = guestMapper.listCategory(q);
+		 req.setAttribute("getSpaceRoom", list);
+		 req.setAttribute("search", q);
+	 return "guest/guest_categoryView";
+		 }
+	 
+	//카테고리 상세목록에서 건물 상세보기로 이동.
+	@RequestMapping(value = "guest_spaceview.do")
+	public String spaceview(HttpServletRequest req,HttpSession session,@RequestParam int sn) {
+		session.removeAttribute("srdto");
+		session.removeAttribute("sp");
+		session.removeAttribute("sdto");
+		int room_no = sn;
+		SpaceRoomDTO srdto = guestMapper.getSpaceRoom(room_no);
+		Map<String, Integer> map = new HashMap<>();
+		map.put("room_no", room_no);
+		int space_no = srdto.getSpace_no();
+		SpaceDTO sdto = guestMapper.getSpace(space_no);
+		MemberDTO mdto = (MemberDTO) session.getAttribute("memberdto");
+		int member_no = mdto.getMember_no();
+		map.put("member_no",member_no);
+		List<SpaceDibsDTO> list = guestMapper.findLike(map);
+		int res = 0;
+		if(list.size()>0) {
+			System.out.println("찜목록 있음");
+			res = 1;
+		}else {
+			res=0;
+			System.out.println("찜목록 없음");
+		}
+		session.setAttribute("sp", srdto);//SpaceRoom
+		session.setAttribute("like", res);//찜 여부
+		session.setAttribute("sdto", sdto);//Space
+		return "guest/guest_spaceview";
+	}
+
+	//예약 리스트 이동
+	@RequestMapping(value = "guest_reserve.do", method = RequestMethod.POST)
+	public String reserveinput(HttpServletRequest req, @RequestParam Map<String, String> map) {
+		int res = guestMapper.insertRrserve(map);
+		return "guest/guest_reserveList";
+	}
+	//상세보기화면에서 예약화면으로 이동.
+	@RequestMapping(value="guest_reserve.do")
+	public String guest_reserve(HttpServletRequest req, @RequestParam Map<String, String>map) {
+		//상세화면에서 시작날짜 + 종료날짜 받아오기 or 시작날짜 받아오는 map
+		req.setAttribute("map", map);
+		return "guest/guest_reserve";
+	}
+	//예약화면에서 예약하기를 누른 후 보여지는 확인 페이지.
+	//예약 내용 확인 페이지.
+	@RequestMapping(value = "guest_reserveok.do", method = RequestMethod.POST)
+	public String guest_checkout(HttpServletRequest req, @RequestParam Map<String,String> map) {
+		if (map.get("res_req")==null) {
+			map.put("res_req","요청사항없음");
+		}
+		int res = guestMapper.insertReserve(map);
+		System.out.println("res_nm = "+ map.get("res_nm"));
+		System.out.println("res_personnel= "+ map.get("res_personnel"));
+		System.out.println("res_pno= "+ map.get("res_pno"));
+		System.out.println("res_email= "+ map.get("res_email"));
+		System.out.println("res_purpose= "+ map.get("res_purpose"));
+		System.out.println("res_req= "+ map.get("res_req"));
+		System.out.println("start_date= "+ map.get("start_date"));
+		System.out.println("start_time= "+ map.get("start_time"));
+		System.out.println("end_date= "+ map.get("end_date"));
+		System.out.println("end_time= "+ map.get("end_time"));
+		System.out.println("space_nm= "+ map.get("space_nm"));
+		System.out.println("room_no= "+ map.get("room_no"));
+		String member_nm = req.getParameter("member_nm");
+		req.setAttribute("rdto", map);	//reserve 페이지에서 입력 된 내용 불러오기 위해 req에 dto 저장.
+		return "guest/guest_checkout";
+	}
+	@RequestMapping(value = "guest_checkoutok.do", method = RequestMethod.POST)
+	public String guest_checkoutok(HttpServletRequest req, @RequestParam Map<String,String> map) throws ParseException {
+		
+        SimpleDateFormat dateParser = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
+		Date startStr = dateParser.parse(map.get("use_dt"));
+		Date endStr = dateParser.parse(map.get("use_time"));
+		int start = (Integer)(startStr.getHours());
+		int end = (Integer)(endStr.getHours());
+		int res = start-end;
+		req.setAttribute("res", res);
+		req.setAttribute("map", map);
+		return "guest/guest_checkoutok";
+		
+		
+		
+	}
+	
+
+		//회원 별 예약 리스트 페이지 이동
+	@RequestMapping(value = "guest_reservelist.do")
+	public String g_reserve_list(HttpServletRequest req,HttpSession session) {
+		MemberDTO mdto = (MemberDTO) session.getAttribute("memberdto");
+		int member_no = mdto.getMember_no();
+		List<ReserveListDTO> reserveList = guestMapper.reserveList(member_no);
+		req.setAttribute("reserveList", reserveList);
+		return "guest/guest_reserveList";
+	}
+	//예약 상세 보기 이동
+	@RequestMapping(value="guest_reserve_view.do")
+	public String guset_reserve_view(HttpServletRequest req, @RequestParam Map<String,String> map) {
+		ReserveListDTO reserveView = guestMapper.reserveView(map);
+		req.setAttribute("reserveView", reserveView);
+		return "guest/guest_reserve_view";
+	}
+	//찜목록 이동
+	@RequestMapping(value="guest_dibs.do")
+	public String guest_dibs() {
+		return "guest/guest_dibs";
+	}
+	//찜하기
+	@RequestMapping(value = "guest_like.do")
+	public  @ResponseBody int guest_like(HttpSession session,@RequestParam Map<String,Integer> map) {
+		MemberDTO mdto = (MemberDTO) session.getAttribute("memberdto");
+		int member_no = mdto.getMember_no();
+		map.put("member_no", member_no);
+		List<SpaceDibsDTO> list = guestMapper.findLike(map);
+		System.out.println("찾기 완료");
+		System.out.println("room_no="+map.get("room_no"));
+		int res=0;
+		if(list.size()<1) {
+			res = guestMapper.AddLike(map);
+			res = 1;
+			System.out.println("더하기 완료");
+		}else{
+			res = guestMapper.RemoveLike(map);
+			res = 0;
+			System.out.println("지우기 완료");
+		}
+		
+		return res;
+	}
+	// 상세보기 페이지에서 정보 받아서 timetable 생성
+	@RequestMapping("/timetable.do")
+	public @ResponseBody Map<String, Object> timetable(@RequestParam Map<String, Integer> map) {
+		int room_no = map.get("room_no");
+		Map<String,Object> resMap = new HashMap<String, Object>();
+		SpaceRoomDTO srdto = guestMapper.roomtime(room_no);
+		//방 운영시간 추출
+		Date room_open = srdto.getRoom_time_s();
+		Date room_close = srdto.getRoom_time_e();
+		int stime = (int) room_open.getTime();
+		int etime = (int) room_close.getTime();
+		resMap.put("stime",stime);
+		resMap.put("etime",etime);
+		//예약리스트에서 선택된 방에 대한 예약내역 확인.		
+		int syear = map.get("syear");
+		int smonth = map.get("smonth");
+		int sdate = map.get("sdate");
+		LocalDate slDate = LocalDate.of(syear,smonth,sdate);
+		List<ReserveDTO> roomList = guestMapper.RoomReserveList(room_no,slDate);
+		if(roomList.contains(slDate)) {
+			resMap.put("rsvRList",roomList);
+		}
+		return resMap;
+	}
+}

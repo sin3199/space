@@ -1,0 +1,38 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    <%@ include file="top.jsp"%>
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>게스트 카테고리 뷰</title>
+
+  </head>
+  <body>
+   <c:if test="${not empty mode}">
+  <h1 align="center">${mode.cate_nm}상세 보기</h1>
+  </c:if>
+<div class="container">
+	<c:if test="${empty getSpaceRoom}">
+	등록된 방이 없습니다.
+	</c:if>
+	<div class="row">
+	<c:forEach var="dto" items="${getSpaceRoom}">
+	 <div class="col-lg-4 col-md-6" style="padding-bottom: 15px;">
+    	   <div class="card" style="width: auto;">
+				 <a href="guest_spaceview.do?sn=${dto.room_no}">
+					 <img src="resources/img/guest/${dto.room_img1}" class="card-img-top" alt="...">
+		 			 <div class="card-body">
+				    <h5 class="card-title">${dto.room_nm}</h5>
+				    <button type="button" class="btn btn-primary">방 상세보기로 가기</button>
+				  </div>
+				  </a>
+			</div>
+    </div>
+    </c:forEach>
+      </div>
+    </div>
+</body>
+</html>

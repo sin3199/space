@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bigdataB.space.mapper.adminMapper">
+
+	<!-- 카테고리 입력 -->
+	<insert id="insertCate" parameterType="spaceTypeDTO">
+		insert into space_type(cate_no, cate_nm, cate_img, cate_st) values(seq_space_type.nextval, #{cate_nm}, #{cate_img}, 0)
+	</insert>
+	
+	<!-- 메인화면 -->
+	<select id="mainData" resultType="hostListDTO">
+		SELECT * FROM (select rownum rn, A.* from 
+			(SELECT member_nm, member_email, to_char(member_reg_dt,'""YYYY"-"MM"-"DD""') AS member_reg_dt,
+			CASE member_grade WHEN 0 THEN '게스트'
+				  WHEN 1 THEN '호스트'
+				  WHEN 2 THEN '관리자'
+				  ELSE '잘못된계정'
+				  END AS member_grade
+			FROM "MEMBER" m ORDER BY MEMBER_REG_DT DESC )A) 
+				where rn between 1 and 9
+	</select>
+	
+	<!-- 페이징용 카운트 -->
+	<select id="getCount" parameterType="String" resultType="int">
+		select count(*) from ${value}
+	</select>
+	<select id="getCountHost" resultType="int">
+		select count(*) from(
+			select distinct m.member_no, m.member_nm, m.member_email, m.member_reg_dt, m.member_pno, s.space_no,
+			nvl(s.space_nm, '  ') AS space_nm, nvl(REGEXP_REPLACE(s.space_comnum, '(.{3})(.+)(.{5})', '\1-\2-\3'), ' ') as space_comnum
+			from member m 
+			LEFT join space s on m.member_no = s.member_no 
+			LEFT join space_room sr ON sr.space_no = s.space_no
+		where m.member_grade = 1 AND sr.room_st IS NULL OR sr.room_st = 1)
+	</select>
+	<select id="getCountSearch" parameterType="java.util.Map" resultType="int">
+		select count(*) from ${table} where ${select} like '%'|| #{search} ||'%'
+	</select>
+	<select id="getCountSearchGuest" parameterType="java.util.Map" resultType="int">
+		select count(*) from ${table} where member_grade = 0 and ${select} like '%'|| #{search} ||'%'
+	</select>
+	<select id="getCountSearchHost" parameterType="java.util.Map" resultType="int">
+		select count(*) from ${table} where member_grade = 1 and ${select} like '%'|| #{search} ||'%'
+	</select>
+	<select id="getCountSearchRoom" parameterType="java.util.Map" resultType="int">
+		select count(*) from (
+		select sr.room_no 
+			from space_room sr, space s, space_type st, member m 
+				where sr.space_no = s.space_no and m.member_no = s.member_no and st.cate_no = s.cate_no and room_st != 4
+					and ${select} like '%'|| #{search} ||'%')
+	</select>
+	<select id="getCountSearchReserve" parameterType="java.util.Map" resultType="int">
+		select count(*) from (
+		select res.res_no
+		from reserve res, space_room sr, member m, space s
+		where res.room_no = sr.room_no and s.space_no = sr.space_no and res.member_no = m.member_no and res.res_st != 4 and ${select} like '%'|| #{search} ||'%'
+		)
+	</select>
+	<select id="getCountSearchCate" parameterType="java.util.Map" resultType="int">
+		select count(*) from(
+		select *
+			from space_type where ${select} like '%'|| #{search} ||'%' and cate_st = 0
+		)
+	</select>
+	
+	
+	
+	
+	
+
+	<!-- 카테고리 리스트 -->
+	<select id="listCate" parameterType="java.util.Map" resultType="spaceTypeDTO">
+		select * from space_type where Cate_st=0 order by cate_nm ${sort}
+	</select>
+	<select id="listCategory" parameterType="java.util.Map" resultType="spaceTypeDTO">
+		select * from (select rownum rn, A.* from 
+			(select * from space_type order where cate_st=0 by cate_nm ${sort})A) 
+				where rn between ${startRow} and ${endRow}
+	</select>
+	
+	
+	<!-- 카테고리 검색 -->
+	<select id="searchCate" parameterType="java.util.Map" resultType="spaceTypeDTO">
+		select *
+			from space_type where ${select} like '%'|| #{search} ||'%' and cate_st = 0
+				order by cate_nm ${sort}
+	</select>
+	
+	
+		
+	<!-- 호스트(방) 리스트 -->
+	<select id="listHost" parameterType="java.util.Map" resultType="hostListDTO">
+			select * from (select rownum rn, A.* from 
+			(
+			select distinct m.member_no, m.member_nm, m.member_email, m.member_reg_dt, m.member_pno, s.space_no,
+				nvl(s.space_nm, '  ') AS space_nm, nvl(REGEXP_REPLACE(s.space_comnum, '(.{3})(.+)(.{5})', '\1-\2-\3'), ' ') as space_comnum
+				from member m 
+				LEFT join space s on m.member_no = s.member_no 
+				LEFT join space_room sr ON sr.space_no = s.space_no
+				where m.member_grade = 1 AND sr.room_st IS NULL OR sr.room_st = 1
+				order by ${column} ${sort})
+				A) 
+				where rn between ${startRow} and ${endRow}
+			
+	</select>
+	<!-- 호스트 검색 -->
+	<select id="searchHost" parameterType="java.util.Map" resultType="hostListDTO">
+			select * from (select rownum rn, A.* from 
+			(
+		 	select distinct m.member_no, m.member_nm, m.member_email, m.member_reg_dt, m.member_pno, s.space_no,
+				nvl(s.space_nm, '  ') AS space_nm, nvl(REGEXP_REPLACE(s.space_comnum, '(.{3})(.+)(.{5})', '\1-\2-\3'), ' ') as space_comnum
+				from member m 
+				LEFT join space s on m.member_no = s.member_no 
+				LEFT join space_room sr ON sr.space_no = s.space_no
+				where ${select} like '%${search}%' and m.member_grade = 1 AND (sr.room_st IS NULL OR sr.room_st = 1)
+				order by ${column} ${sort}
+				)A) 
+				where rn between ${startRow} and ${endRow}
+	</select>
+
+	
+	<!-- 게스트 리스트 -->
+	<select id="listGuest" parameterType="java.util.Map" resultType="memberDTO">
+		select * from (select rownum rn, A.* from 
+			(select member_no, member_email, member_nm, member_pno, member_reg_dt
+		 from member where member_grade = 0
+			order by ${column} ${sort})A) 
+				where rn between ${startRow} and ${endRow}
+	</select>
+	<!-- 게스트 검색 -->
+	<select id="searchGuest" parameterType="java.util.Map" resultType="memberDTO">
+		select * from (select rownum rn, A.* from 
+			(
+		select member_no, member_email, member_nm, member_pno, member_reg_dt
+		 from member where member_grade = 0 and ${select} like '%'||#{search}||'%'
+			order by ${column} ${sort}
+		)A) 
+		where rn between ${startRow} and ${endRow}
+	</select>
+	
+	
+	
+	<!-- 방 리스트 -->
+	<select id="listSpaceRoom" parameterType="java.util.Map" resultType="roomListDTO">
+		select * from (select rownum rn, A.* from 
+			(
+			select sr.room_no, m.member_no, m.member_nm, st.cate_nm, sr.room_nm, to_char(sr.room_price,'FM999,999,999') as room_price,
+			to_number(sr.room_fit) as room_fit, sr.room_desc, sr.room_img1, to_char(sr.room_time_s, '""HH24"시"') as room_time_s, to_char(sr.room_time_e , '""HH24"시"') as room_time_e ,
+			nvl(REPLACE(concat(REPLACE(substr(sr.room_week,2,1),'0','월'), concat(REPLACE(substr(sr.room_week,3,1),'0','화'), concat(REPLACE(substr(sr.room_week,4,1),'0','수'),concat(REPLACE(substr(sr.room_week,5,1),'0','목'),concat(REPLACE(substr(sr.room_week,6,1),'0','금'),concat(REPLACE(substr(sr.room_week,7,1),'0','토'),REPLACE(substr(sr.room_week,1,1),'0','일'))))))),'1',''),'연중무휴')
+			as room_week, CASE sr.room_st WHEN 0 THEN '승인대기중'
+								WHEN 1 THEN '승인완료'
+								WHEN 2 THEN '승인취소'
+								ELSE '모름'
+								END AS room_st 
+				from space_room sr, space s, space_type st, member m 
+					where sr.space_no = s.space_no and m.member_no = s.member_no and st.cate_no = s.cate_no and sr.room_st != 4
+						order by ${column} ${sort}
+						)A) 
+							where rn between ${startRow} and ${endRow}
+	</select>
+	<!-- 방 검색 -->
+	<select id="searchRoom" parameterType="java.util.Map" resultType="roomListDTO">
+		select * from (select rownum rn, A.* from 
+			(
+		select sr.room_no, m.member_no, m.member_nm, st.cate_nm, sr.room_nm, to_char(sr.room_price,'FM999,999,999') as room_price, 
+		to_number(sr.room_fit) as room_fit, sr.room_desc, sr.room_img1, to_char(sr.room_time_s, '""HH24"시"') as room_time_s, to_char(sr.room_time_e , '""HH24"시"') as room_time_e ,
+		nvl(REPLACE(concat(REPLACE(substr(sr.room_week,2,1),'0','월'), concat(REPLACE(substr(sr.room_week,3,1),'0','화'), concat(REPLACE(substr(sr.room_week,4,1),'0','수'),concat(REPLACE(substr(sr.room_week,5,1),'0','목'),concat(REPLACE(substr(sr.room_week,6,1),'0','금'),concat(REPLACE(substr(sr.room_week,7,1),'0','토'),REPLACE(substr(sr.room_week,1,1),'0','일'))))))),'1',''),'연중무휴')
+			as room_week, CASE sr.room_st WHEN 0 THEN '승인대기중'
+								WHEN 1 THEN '승인완료'
+								WHEN 2 THEN '승인취소'
+								ELSE '모름'
+								END AS room_st 
+			from space_room sr, space s, space_type st, member m 
+				where sr.space_no = s.space_no and m.member_no = s.member_no and st.cate_no = s.cate_no and sr.room_st != 4
+					and ${select} like '%'|| #{search} ||'%'
+						order by ${column} ${sort}
+						)A) 
+							where rn between ${startRow} and ${endRow}
+	</select>
+		
+		
+	<!-- 예약 리스트 -->
+	<select id="listReserve" parameterType="java.util.Map" resultType="reservedRoomDTO">
+		select * from (select rownum rn, A.* from 
+			(
+		select res.res_no, res.res_nm, sr.room_nm, to_char(res.use_dt,'""YYYY"년 "MM"월 "DD"일 "HH24"시 "MI"분"') as use_dt, to_char(res.use_time,'""YYYY"년 "MM"월 "DD"일 "HH24"시 "MI"분"') as use_time, s.space_pno, res.res_pno, 
+				res.res_email, TO_NUMBER(res.res_personnel) AS res_personnel,
+				CASE res.res_st WHEN 0 THEN '예약확정 대기중'
+								WHEN 1 THEN '예약취소'
+								WHEN 2 THEN '예약완료'
+								ELSE '모름'
+								END AS res_st
+		from reserve res, space_room sr, member m, space s
+		where res.room_no = sr.room_no and s.space_no = sr.space_no and res.member_no = m.member_no and res.res_st != 4
+		order by ${column} ${sort}
+			)A) 
+				where rn between ${startRow} and ${endRow}
+		
+		
+	</select>
+	<!-- 예약 검색 -->
+	<select id="searchReserve" parameterType="java.util.Map" resultType="reservedRoomDTO">
+		select * from (select rownum rn, A.* from 
+			(
+		select res.res_no, res.res_nm, sr.room_nm, to_char(res.use_dt,'""YYYY"년 "MM"월 "DD"일 "HH24"시 "MI"분"') as use_dt, to_char(res.use_time,'""YYYY"년 "MM"월 "DD"일 "HH24"시 "MI"분"') as use_time, s.space_pno, res.res_pno, 
+				res.res_email, to_number(res.res_personnel) as res_personnel,
+				CASE res.res_st WHEN 0 THEN '예약확정 대기중'
+								WHEN 1 THEN '예약취소'
+								WHEN 2 THEN '예약완료'
+								ELSE '모름'
+								END AS res_st
+		from reserve res, space_room sr, member m, space s
+		where res.room_no = sr.room_no and s.space_no = sr.space_no and res.member_no = m.member_no and res.res_st != 4 and ${select} like '%'|| #{search} ||'%'
+		order by ${column} ${sort}
+			)A) 
+				where rn between ${startRow} and ${endRow}
+	</select>
+	
+	
+	
+	<!-- deleteMember 실제로는 member_grade 값을 수정 해 list에서 보이지 않게 처리 -->	
+	<update id="deleteMember" parameterType="int">
+		update member set member_grade = 2 where member_no = #{member_no}
+	</update>
+	
+	<select id="ifHasBuilding" parameterType="int" resultType="int">
+		select count(member_no) FROM SPACE WHERE member_no= #{member_no}
+	</select>
+	<select id="getMemberNm" parameterType="int" resultType="memberDTO">
+		select member_nm from member where member_no =#{member_no}
+	</select>
+	
+	<!-- deleteBuilding 건물에는 따로 grade 값을 주지 않았기 때문에  실제로 데이터를 삭제-->
+	
+	
+	<delete id="deleteBuilding" parameterType="int">
+		delete from space where space_no = #{space_no}
+	</delete>
+	<select id="ifHasRoom" parameterType="int" resultType="int">
+		select count(space_no) from space_room where space_no = #{space_no}
+	</select>
+	<select id="getSpaceNm" parameterType="int" resultType="spaceDTO">
+		select member_no, space_nm from space where space_no = #{space_no}
+	</select>
+	
+	
+	<!-- 방 번호를 가져와 예약이 있는지 확인 -->
+	<select id="ifHasReservation" parameterType="int" resultType="int">
+		select count(res_no)
+		from reserve r
+		<![CDATA[where room_no = #{room_no} and r.use_time < current_date]]> and res_st != 4
+	</select>
+	
+	<update id="deleteSpaceRoom" parameterType="int">
+		update space_room set room_st = 4 where room_no = #{room_no}
+	</update>
+	
+	
+	<!-- 예약번호를 가져와 예약 완료(res_st 값이 2)면서 현재 날짜보다 과거인지 확인 -->
+	<!-- 조건에 부합하면 count 값이 0이 아니기때문에 0인경우에는 예약이 미래에 존재 -->
+	<select id="isFinished" parameterType="int" resultType="int">
+		select count(*)
+		from reserve
+		where <![CDATA[use_time < current_date]]> and res_st != 4 and res_no = #{res_no}
+	</select>
+	<update id="deleteReservation" parameterType="int">
+		update reserve set res_st = 4 where res_no = #{res_no}
+	</update>
+	
+	
+	<update id="CateDel" parameterType="int">
+		update SPACE_TYPE SET CATE_ST = 1 WHERE CATE_NO = #{cate_no}	
+		</update>
+	
+	
+	<update id="approveRoom" parameterType="int">
+		update space_room set room_st = 1 where room_no = #{room_no}
+	</update>
+	
+	
+	<update id="cancelReserve" parameterType="int">
+		update reserve set res_st = 1 where res_no = #{res_no}
+	</update>
+	
+	
+	
+	
+	
+	<select id="reservedDateNTime" parameterType="int" resultType="reserveDTO">
+		SELECT use_dt, use_time 
+		FROM RESERVE WHERE res_st != 2 AND res_st !=4 AND room_no = #{room_no} ORDER BY use_dt
+	</select>
+	
+
+
+</mapper>
+
+

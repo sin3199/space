@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.bigdataB.space.mapper.adminMapper">
+	<!-- admin 체크 -->
+	<select id="adminMeb" parameterType="java.util.Map" resultType="MemberDTO">
+		SELECT * FROM MEMBER WHERE member_email = #{member_email} AND member_grade = #{member_grade2}
+	</select>
+	<!-- 이메일 중복체크 -->
+	<select id="emailCheck" parameterType="com.bigdataB.space.dto.MemberDTO" resultType="com.bigdataB.space.dto.MemberDTO">
+		SELECT * FROM MEMBER WHERE member_email = #{member_email} AND member_grade = #{member_grade}
+	</select>
+	<!-- 회원가입 -->
+	<insert id="insertMember" parameterType="com.bigdataB.space.dto.MemberDTO" >
+		INSERT INTO MEMBER values(MEMBER_SEQ.NEXTVAL,#{member_email},#{member_pw},#{member_nm},#{member_pno},sysdate,#{member_grade})
+	</insert>
+	<!-- 로그인 -->
+	<select id="getMember" parameterType="java.util.Map" resultType="MemberDTO">
+		SELECT * FROM MEMBER WHERE member_email = #{member_email} AND member_grade = #{member_grade}
+	</select>
+	<!-- email 찾기 -->
+	<select id="findMember" parameterType="com.bigdataB.space.dto.MemberDTO" resultType="MemberDTO">
+		SELECT * FROM MEMBER WHERE MEMBER_PNO = #{member_pno} AND MEMBER_GRADE = #{member_grade}
+	</select>
+	<!-- pw변경 -->
+	<update id="passUpdate" parameterType="com.bigdataB.space.dto.MemberDTO">
+		UPDATE  MEMBER SET MEMBER_PW = #{member_pw} WHERE MEMBER_EMAIL = #{member_email} AND MEMBER_GRADE = #{member_grade}
+	</update>
+	<!-- space room day찾기 -->
+	<select id="daycheck" parameterType="com.bigdataB.space.dto.SpaceRoomDTO" resultType="com.bigdataB.space.dto.SpaceRoomDTO" >
+		SELECT * FROM SPACE_ROOM WHERE ROOM_NO = #{space_no};
+	</select>
+	<select id="chechDay" parameterType="com.bigdataB.space.dto.ReserveDTO" resultType="com.bigdataB.space.dto.RefineDTO">
+		SELECT use_dt, use_time FROM 
+	RESERVE WHERE res_st != 2 AND res_st !=4 AND ROOM_NO = #{room_no} AND use_dt BETWEEN to_date(#{day},'YYYY-MM-DD') AND to_date(#{day},'YYYY-MM-DD')+1 ORDER BY use_dt
+	</select>
+</mapper>

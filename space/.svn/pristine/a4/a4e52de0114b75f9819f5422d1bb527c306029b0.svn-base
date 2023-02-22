@@ -1,0 +1,132 @@
+package com.bigdataB.space.service;
+
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.util.Base64;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import javax.mail.internet.MimeMessage;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
+
+import com.bigdataB.space.dto.MemberDTO;
+import com.bigdataB.space.dto.RefineDTO;
+import com.bigdataB.space.dto.ReserveDTO;
+import com.bigdataB.space.dto.SpaceRoomDTO;
+
+@Service
+public class LoginMapper {
+	@Autowired
+	private SqlSession sqlSession;
+	
+	@Autowired
+	private JavaMailSender mailSender;
+	
+	public MemberDTO emailCheck(MemberDTO dto) { //email 중복체크
+		return sqlSession.selectOne("emailCheck",dto);
+	}
+	
+	public int insertMember(MemberDTO dto) {	//회원가입
+		return sqlSession.insert("insertMember", dto);
+	}
+	public MemberDTO getMember(Map<String,String> map) { //로그인
+		return sqlSession.selectOne("getMember", map);
+	}
+	public MemberDTO emailFind(MemberDTO dto) {		//이메일찾기
+		return sqlSession.selectOne("findMember", dto);
+	}
+	
+	public int passUpdate(MemberDTO dto) {		//pw찾기->비밀번호변경ㅇ
+		return sqlSession.update("passUpdate",dto);
+	}
+	public MemberDTO adminMeb(Map<String,String> map) {
+		return sqlSession.selectOne("adminMeb", map);
+	}
+	public SpaceRoomDTO daycheck(SpaceRoomDTO dto) {
+		return sqlSession.selectOne("daycheck", dto);
+	}
+	public List<RefineDTO> chechDay(ReserveDTO dto){
+		return sqlSession.selectList("chechDay", dto);
+	}
+
+	
+	public Key generateKey(String key) throws Exception {//AES 128 설정
+		Key keySpec;
+
+		byte[] keyBytes = new byte[16];
+		byte[] b = key.getBytes("UTF-8");
+
+		int len = b.length;
+		if (len > keyBytes.length) {
+			len = keyBytes.length;
+		}
+
+		System.arraycopy(b, 0, keyBytes, 0, len);
+		keySpec = new SecretKeySpec(keyBytes, "AES");
+		return keySpec;
+	}
+	
+	public String encryptText(String text, String key) {//AES 인코딩 과정 Base64
+		String encrypted = "";
+		try {
+			SecretKeySpec ks = (SecretKeySpec) generateKey(key);
+			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+			cipher.init(Cipher.ENCRYPT_MODE, ks);
+			byte[] encryptedBytes = cipher.doFinal(text.getBytes());
+			String base64 = Base64.getEncoder().encodeToString(encryptedBytes);
+			encrypted = new String(base64);
+		} catch (Exception e) {
+		}
+
+		return encrypted;
+	}
+	
+	public String decAES(String enStr, String key) throws Exception {//인코딩과정
+		SecretKeySpec ks = (SecretKeySpec) generateKey(key);
+
+		Cipher c = Cipher.getInstance("AES/ECB/PKCS5Padding");
+		c.init(Cipher.DECRYPT_MODE, ks);
+		    
+		byte[] byteStr = Base64.getDecoder().decode(enStr.getBytes("UTF-8"));
+		String decStr = new String(c.doFinal(byteStr), "UTF-8");
+
+		return decStr;
+	}
+
+
+	public int sendCertiMail(MemberDTO dto) {		//인증메일전송
+		Random random = new Random();
+		int checkNum = random.nextInt(888888) + 111111;
+
+		String setFrom = "qwesxza@gmail.com";
+		String toMail = dto.getMember_email();
+		String title = "space 인증 이메일 입니다.";
+		String content = "<img src=\"https://postfiles.pstatic.net/MjAyMjEyMjdfMjM1/MDAxNjcyMTAzNDk0MDkz.ya6_eo6KCxkKhn5yGB1rsTFor2M6kxe2ALGPdbSIr20g.YmKX35hjPTO_mfOdgjsjAJkVh_82H9-DWBiWktvplhEg.JPEG.qwesxza/logo.jpg?type=w580\">"
+		+"<h1>인증 메일입니다.</h1>" + "<br><br>" + "인증번호는" + checkNum + "입니다." + "<br>"
+				+ "해당 인증번호를 인증번호란에 기입해주세요.";
+		try {
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+			helper.setFrom(setFrom);
+			helper.setTo(toMail);
+			helper.setSubject(title);
+			helper.setText(content, true);
+			mailSender.send(message);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return checkNum;
+	}
+
+
+
+}

@@ -1,0 +1,101 @@
+package com.bigdataB.space.service;
+
+import java.util.*;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.bigdataB.space.dto.MemberDTO;
+import com.bigdataB.space.dto.PayDTO;
+import com.bigdataB.space.dto.ReplyDTO;
+import com.bigdataB.space.dto.ReserveListDTO;
+import com.bigdataB.space.dto.ReviewDTO;
+import com.bigdataB.space.dto.SpaceDTO;
+
+@Service
+public class HostBuildingMapper {
+
+	@Autowired
+	private SqlSession sqlSession;
+
+	public List<SpaceDTO> listHostBuilding(int start, int end, int member_no) {
+		Map<String, Integer> map = new Hashtable<String, Integer>();
+		map.put("start", start);
+		map.put("end", end);
+		map.put("member_no", member_no);
+		return sqlSession.selectList("listHostBuilding", map);
+	}
+
+	public int insertHostBuilding(SpaceDTO sdto) {
+		return sqlSession.insert("insertHostBuilding", sdto);
+	}
+
+	public int deleteHostBuilding(int b_no) {
+		return sqlSession.delete("deleteHostBuilding", b_no);
+	}
+
+	public int updateHostBuilding(SpaceDTO sdto) {
+		System.out.println("SPACE_NM=" + sdto.getSpace_nm());
+		System.out.println("SPACE_SUB_NM=" + sdto.getSpace_sub_nm());
+		System.out.println("SPACE_INTRO=" + sdto.getSpace_intro());
+		System.out.println("SPACE_GUIDE=" + sdto.getSpace_guide());
+		System.out.println("PRECAUTIONS=" + sdto.getPrecautions());
+		System.out.println("SPACE_ADDR=" + sdto.getSpace_addr());
+		System.out.println("SPACE_PNO=" + sdto.getSpace_pno());
+		System.out.println("SPACE_TIME=" + sdto.getSpace_time());
+		System.out.println("SPACE_CLOSED_DT=" + sdto.getSpace_closed_dt());
+		System.out.println("SPACE_COMNUM=" + sdto.getSpace_comnum());
+		System.out.println("CATE_NO=" + sdto.getCate_no());
+		
+		return sqlSession.update("updateHostBuilding", sdto);
+	}
+
+	public SpaceDTO getHostBuilding(int space_no) {
+		return sqlSession.selectOne("getHostBuilding", space_no);
+	}
+
+	public int getHostBuildingCount(int member_no) {
+		return sqlSession.selectOne("getHostBuildingCount", member_no);
+	}
+
+	public int updateHost_Info(MemberDTO mdto) {
+		return sqlSession.update("updateHost_Info", mdto);
+	}
+	
+	public List<ReserveListDTO> listGuestRes(int start, int end, int member_no) {
+		Map<String, Integer> map = new Hashtable<String, Integer>();
+		map.put("start", start);
+		map.put("end", end);
+		map.put("member_no", member_no);
+		return sqlSession.selectList("listGuestRest", map);
+	}
+	
+	public ReserveListDTO ModalList( ReserveListDTO dto) {
+		return sqlSession.selectOne("ModalList", dto);
+	}
+	
+	public int getlistGuestResCount(int member_no) {
+		return sqlSession.selectOne("getlistGuestResCount",member_no);
+	}
+	public int deleteReserve(int res_no) {
+		return sqlSession.update("deleteReserve", res_no);
+	}
+
+	public ReviewDTO getReview(ReviewDTO dto) {
+		return sqlSession.selectOne("getReview", dto);
+	}
+
+	public PayDTO HostPayCheck(PayDTO pdto) {
+		return sqlSession.selectOne("HostPayCheck",pdto);
+	}
+	
+	public int insert_hostReview(ReviewDTO dto) {
+		return sqlSession.insert("insert_hostReview", dto);
+	}
+	
+	public int payChange(int res_no) {
+		return sqlSession.update("payChange", res_no);
+	}
+	
+}

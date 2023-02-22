@@ -1,0 +1,69 @@
+package com.bigdataB.space.service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.bigdataB.space.dto.HostListDTO;
+import com.bigdataB.space.dto.MemberDTO;
+import com.bigdataB.space.dto.ReservedRoomDTO;
+import com.bigdataB.space.dto.RoomListDTO;
+import com.bigdataB.space.dto.SpaceTypeDTO;
+
+
+
+@Service
+public class AdminMapper {
+	@Autowired
+	private SqlSession sqlSession;
+	
+	public int getCount() {
+		return sqlSession.selectOne("getCount");
+	}
+	 
+	public int insertCate(SpaceTypeDTO dto) {
+		return sqlSession.insert("insertCate",dto); 
+	}
+
+	public List<SpaceTypeDTO> listCate(){
+		return sqlSession.selectList("listCate");
+	}
+	public List<SpaceTypeDTO> sortCate(Map<String,String> map){
+		return sqlSession.selectList("sortCate",map);
+	}
+
+	public List<MemberDTO> listGuest(){
+		return sqlSession.selectList("listGuest");
+	}
+	public List<MemberDTO> sortGuest(Map<String,String> map){
+		return sqlSession.selectList("sortGuest",map);
+	}
+	
+	public List<MemberDTO> listHost(Map<String,String> map){ 
+		return sqlSession.selectList("listHost",map);
+	}
+	public List<HostListDTO> sortHost(Map<String,String> map){ 
+		return sqlSession.selectList("sortHost",map);
+	}
+	
+	public List<RoomListDTO> listRoom(){
+		return sqlSession.selectList("listSpaceRoom");
+	}
+	public List<RoomListDTO> sortRoomList(Map<String,String> map){
+		return sqlSession.selectList("listSpaceRoomSort",map);
+	}
+	
+	
+	public List<ReservedRoomDTO>listReserve(){
+		return sqlSession.selectList("listReserve");
+	}
+	public List<ReservedRoomDTO>sortReserve(Map<String,String>map){
+		System.out.println(map+"-------------====--------");
+		return sqlSession.selectList("sortReserve", map);
+	}
+
+	
+}

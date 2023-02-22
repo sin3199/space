@@ -1,0 +1,194 @@
+package com.bigdataB.space;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+import javax.mail.internet.MimeMessage;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.bigdataB.space.dto.MemberDTO;
+import com.bigdataB.space.service.LoginMapper;
+
+@Controller
+public class LoginController {
+	@Autowired
+	LoginMapper loginMapper;
+	
+	@Autowired
+	private JavaMailSender mailSend;
+
+	@Autowired
+	BCryptPasswordEncoder pwdEncoder = new BCryptPasswordEncoder();
+
+	@RequestMapping(value = "hostLogin.do")
+	public String host_login() {
+		return "login/hostLogin";
+	}
+
+	@RequestMapping(value = "guestLogin.do", method=RequestMethod.GET)
+	public String guest_Login() {
+		return "login/guestLogin";
+	}
+
+	@RequestMapping(value = "host_ssn.do")
+	public String host_ssn() {
+		return "login/host_ssn";
+	}
+
+	@RequestMapping(value = "guest_ssn.do")
+	public String guest_ssn() {
+		return "login/guest_ssn";
+	}
+
+	@RequestMapping(value = "emailCheck.do")
+	public @ResponseBody Map<String, Object> emailCheck(@ModelAttribute MemberDTO dto) {
+		int result = loginMapper.emailCheck(dto);
+		Map<String, Object> resMap = new HashMap<String, Object>();
+		resMap.put("result", result);
+		return resMap;
+	}
+
+	@RequestMapping(value = "member_ssn.do")
+	public String member_ssn(HttpServletRequest req, @ModelAttribute MemberDTO dto) {
+		try {
+			String inputpwd = dto.getMember_pw();
+			String pwd = pwdEncoder.encode(inputpwd);
+			dto.setMember_pw(pwd);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		int res = loginMapper.insertMember(dto);
+		if (res > 0) {
+			if (dto.getMember_grade() == 1) {
+				req.setAttribute("msg", "회원가입성공");
+				req.setAttribute("url", "host_home.do");// 호스트main
+				return "message";
+			} else {
+				req.setAttribute("msg", "회원가입성공");
+				req.setAttribute("url", "guest_main.do");// guest main
+				return "message";
+			}
+		} else {
+			req.setAttribute("msg", "회원가입실패");
+			req.setAttribute("url", req.getServletPath());
+			return "message";
+		}
+
+	}
+	
+	@RequestMapping(value = "guestLogin.do",  method=RequestMethod.POST)
+	public String guest_Login(HttpServletRequest req, 
+			@RequestParam Map<String,String> map, HttpServletResponse resp) {
+		MemberDTO dto = loginMapper.getMember(map.get("member_email"));
+		
+		if(dto==null) {
+			req.setAttribute("msg", "회원이 아니십니다.");
+			req.setAttribute("url", "guestLogin.do");
+		}else {
+			boolean pwdMatch = false;
+			pwdMatch = pwdEncoder.matches(map.get("member_pw"), dto.getMember_pw());
+			if(pwdMatch) {
+				req.setAttribute("msg", dto.getMember_nm()+"님 환영합니다.");
+				req.setAttribute("url", "guest_main.do");
+				HttpSession session = req.getSession();
+				session.setAttribute("memberdto", dto);
+				Cookie ck = new Cookie("saveEmail", map.get("member_email"));
+				if(map.containsKey("saveEmail")) ck.setMaxAge(24*60*60);
+				else ck.setMaxAge(0);
+				resp.addCookie(ck);
+			}else {
+				req.setAttribute("msg", "이메일, 패스워드를 확인해주세요");
+				req.setAttribute("url", "guestLogin.do");
+			}
+		}
+		return "message";
+	}
+	
+	@RequestMapping(value = "guest_logout.do")
+	public String guest_logout(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		session.invalidate();
+		req.setAttribute("msg", "로그아웃 되었습니다.");
+		req.setAttribute("url", "guest_main.do");
+		return "message";
+	}
+	
+	@RequestMapping(value = "host_logout.do")
+	public String host_logout(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		session.invalidate();
+		req.setAttribute("msg", "로그아웃 되었습니다.");
+		req.setAttribute("url", "host_home.do");
+		return "message";
+	}
+	
+//	@ResponseBody
+////	@PostMapping("sendmail.do")
+//	public Map<String, Object> sendMail(HttpServletRequest req, @ModelAttribute MemberDTO dto) {
+//		System.out.println("email인증 : "+dto.getMember_email());
+//		Map<String, Object> retMap = new HashMap<String, Object>();
+//		retMap.put("authNumber", mailService.joinEmail(dto.getMember_email()));
+//		return retMap;
+//	}
+	@ResponseBody
+	@RequestMapping(value = "sendmail.do")
+	public Map<String, Object> sendMail( @ModelAttribute MemberDTO dto) {
+		Map<String, Object> resMap = new HashMap<String, Object>();
+		
+		Random random = new Random();
+		int checkNum = random.nextInt(888888)+111111;
+		
+		String setFrom = "qwesxza@gmail.com";
+		String toMail = dto.getMember_email();
+		String title = "space 회원가입 인증 이메일 입니다.";
+		String content = 
+				"회원 가입 인증 메일입니다."+
+				"<br><br>"+
+				"인증번호는" + checkNum + "입니다."+
+				"<br>"+
+				"해당 인증번호를 인증번호란에 기입해주세요.";
+		try {
+			MimeMessage message = mailSend.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+			helper.setFrom(setFrom);
+			helper.setTo(toMail);
+			helper.setSubject(title);
+			helper.setText(content);
+			mailSend.send(message);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+
+		try {
+			String key = "secretkeyspace12";
+			String encryptNumber = loginMapper.encryptText(String.valueOf(checkNum), key);
+			System.out.println("##### original number result : " + checkNum);
+			System.out.println("##### encrypt number result : " + encryptNumber);
+//			String decryptNumber = loginMapper.decAES(encryptNumber, key);
+//			System.out.println("##### decrypt number result : " + decryptNumber);
+			resMap.put("checkNum", encryptNumber);
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	
+		return resMap;
+	}
+	
+}

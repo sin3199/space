@@ -1,0 +1,110 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+<%@ include file="../host_top.jsp"%>
+
+<!-- center// -->
+
+<div class="container">
+
+	<div class="py-5 text-center">
+    <h2>공간 정보를 입력해주세요.</h2>
+    <p class="lead">Below is an example form built entirely with Bootstrap’s form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.</p>
+  </div>
+  <hr class="mb-4">
+  <form class="needs-validation" novalidate>
+	  <div class="mb-3">
+	    <label for="email">건물명 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">건물 부제목 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">건물소개 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="강남빌딩">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">시설안내 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="강남빌딩">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">주의사항 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="강남빌딩">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">건물주소 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="강남빌딩">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">전화번호 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="강남빌딩">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">영업시간 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="강남빌딩">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">휴무일 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="강남빌딩">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">지도경로 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="강남빌딩">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">사업자등록번호 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="강남빌딩">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+  	<hr class="mb-4">
+  	<button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+  </form>
+</div>
+
+<!-- center// -->
+
+<%@ include file="../host_bottom.jsp"%>

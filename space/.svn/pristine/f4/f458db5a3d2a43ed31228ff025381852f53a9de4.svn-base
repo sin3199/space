@@ -1,0 +1,60 @@
+$(document).ready(function() { // 제이쿼리 기본
+	var roomweek = $("#room_week").val();
+	var str = Array.from(roomweek);
+	var btns = $("button.day"); //btn 한개가아니라 지금 7개의 btn element들이 들어가있는 배열이다
+	
+	for(var i=0;i<str.length;++i){
+		var value = str[i]; //str(배열) 한글자 가져오기
+		var btn = btns[i]; //btns(버튼배열) 버튼 한개 가져오기
+		
+		//value에 setting 해줘야되는데 일요일값부터 세팅을 해주겟지 토요일까지 일월화수목금토
+		btn.value = value; //설정해줬다
+		
+		
+		//value값 설정해줬으면 css도 설정해줘야하니까 아래꺼 실행할건데 btn 한개 class 가져와
+		var btnClass = btn.getAttribute("class");
+		var btnClassArr = btnClass.split(" "); //그걸 분리해서 배열을 만들어 예를들어    class="day btn btn-primary" 라치면 ["day", "btn", "btn-primary"] 가 나오겟지
+		
+		var v  = btnClassArr[2]; //그 배열에서 2번째꺼가 btn-secondary
+		var newv = "btn-secondary"; //그냥 기본값이 secondary니까 이렇게 쓸게
+		if(value == 0){//휴무일이다 하면 primary로 바꿔주고
+			newv = "btn-primary";
+		}
+		
+		btnClass = btnClass.replace(v, newv); //replace는 string을 바꿔주는거야 "day btn btn-primary" 에서 replace v==>newv 로 그럼 지금 v가 btn--secondary고 newv는 second 또는 primary잖아
+		//그래서 replace한걸 다시 btnClass 변수에 셋팅해주고
+		btn.setAttribute("class", btnClass); //btn 클래스로 설정을 해준다 끝
+	}
+	
+	
+	$("button.day").click(function(){
+		var btn = $(this)[0];
+		
+		var btnClass = btn.getAttribute("class");
+		var btnClassArr = btnClass.split(" ");
+		var newv = "";
+		var v = btnClassArr[2];
+		if(v == "btn-secondary"){
+			newv = "btn-primary";
+		}else if(v == "btn-primary"){
+			newv = "btn-secondary";
+		}
+		btnClass = btnClass.replace(v, newv);
+		btn.setAttribute("class", btnClass);
+		console.log(btn[0]);
+		var btnVal = btn.getAttribute("value");
+		var newVal = (btnVal == 1 ? 0 : 1);
+		btn.setAttribute("value", newVal);
+		
+		var els = $("button.day");
+		var str = "";
+		
+		for(var i=0; i<els.length;i++){
+			str += els[i].value;
+		}
+		$("#room_week").val(str);
+	});
+})
+
+
+	

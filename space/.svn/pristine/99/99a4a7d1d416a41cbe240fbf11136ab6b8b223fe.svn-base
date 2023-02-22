@@ -1,0 +1,71 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ include file="top.jsp"%>
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>게스트정보 화면</title>
+<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+
+	<!--  ------------------------------------------------------------------------------>
+	<div class="container">
+		<div class="row">
+		
+		<div class="col-md-3 mb-4">
+		<div class="col-md ">
+			<div class="list-group">
+				  <a href="guest_my_info.do" class="list-group-item list-group-item-action">내정보</a>
+				  <a href="guest_my_passwd_edit.do" class="list-group-item list-group-item-action">비밀번호 수정</a>
+				  <a href="guest_reservelist.do" class="list-group-item list-group-item-action">예약정보</a>
+			</div>
+		</div>
+		</div>
+
+			<div class="col-md-9">
+			
+			<div class="col-md-8">
+				<h4 class="mb-3"><b>내정보</b></h4>
+				<form class="needs-validation" novalidate>
+
+					<div class="mb-3">
+						<label for="member_email"><b>Email</b></label>
+							<input type="text" class="form-control" id="member_email" value="본인이메일" style="background-color: white;" disabled>
+					</div>
+
+					<div class="mb-3">
+						<label for="member_nm"><b>닉네임</b></label>
+						<div class="input-group mb-3">
+							<input type="text" class="form-control" id="member_nm"	name="member_nm" value="본인닉네임" style="background-color: white;"	disabled>
+							<div class="input-group-append">
+								<button type="button" class="btn btn-primary" 	style="width: 100px;">수정</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="mb-3">
+						<label for="member_pno"><b>전화번호</b></label>
+						<div class="input-group mb-3">
+							<input type="text" class="form-control" id="member_pno" 	name="member_pno" value="본인전화번호"	style="background-color: white;" disabled>
+							<div class="input-group-append">
+								<button type="button" class="btn btn-primary" 	style="width: 100px;">수정</button>
+							</div>
+						</div>
+					</div>
+
+
+					<hr class="mb-4">
+				</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="resources/js/jquery.js"></script>
+	<script src="resources/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

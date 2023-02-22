@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+ 	
+ 	<mapper namespace="com.bigdataB.space.mapper.HostBuildingMapper.xml">
+ 	
+ 	<!-- where member_no=#{memberdto.member_no} -->
+ 	<select id="listHostBuilding" parameterType="java.util.Map" resultType="spaceDTO">
+ 		select * from (select rownum rn, A.* from (select * from space where member_no=#{member_no}
+ 		order by space_no desc)A) where rn between #{start} and #{end}
+ 	</select>
+ 	
+ 	<!-- insert 13 -->
+ 	<insert id="insertHostBuilding" parameterType="spaceDTO">
+ 		insert into space values(hostbuilding_seq.nextval, #{space_nm}, #{space_sub_nm}, #{space_intro}, #{space_guide},
+ 								#{precautions}, #{space_addr}, #{space_pno},
+ 								#{space_time}, #{space_closed_dt},
+ 								#{space_comnum}, #{cate_no}, #{member_no}) 
+ 	</insert>
+
+ 
+	<update id="updateHostBuilding" parameterType="spaceDTO">
+ 		update space set SPACE_NM=#{space_nm}, SPACE_SUB_NM=#{space_sub_nm}, SPACE_INTRO=#{space_intro},SPACE_GUIDE=#{space_guide},
+ 								PRECAUTIONS=#{precautions}, SPACE_ADDR=#{space_addr}, SPACE_PNO=#{space_pno},
+ 		<if test =" space_time!= null and space_time!=''and !space_time.equals('')">
+		SPACE_TIME=#{space_time}, 
+		</if>
+ 		<if test ="space_closed_dt!= null and space_closed_dt!=''and !space_closed_dt.equals('')">
+		SPACE_CLOSED_DT=#{space_closed_dt},
+		</if>						
+ 		SPACE_COMNUM=#{space_comnum}, CATE_NO=#{cate_no}
+ 		where SPACE_NO=#{space_no}							
+	</update>
+	
+ 	<delete id="deleteHostBuilding" parameterType="int">
+		delete from space where SPACE_NO=#{space_no}
+	</delete>
+ 	
+	
+	<select id="getHostBuilding" parameterType="int" resultType="spaceDTO">
+		select * from space where SPACE_NO=#{space_no}
+	</select>
+	
+	<select id="getHostBuildingCount" resultType="Integer" parameterType="spaceDTO">
+		select count(*) from space where member_no=#{member_no}
+	</select>
+	
+	<!-- 내정보 -->
+	<update id="updateHost_Info" parameterType="memberDTO">
+		update member set member_nm=#{member_nm},member_pno=#{member_pno}where member_no=#{member_no}
+	</update>	
+	
+	<!-- 예약리스트 join 쿼리문 2-->   
+   <select id="listGuestRest" parameterType="java.util.Map" resultType="com.bigdataB.space.dto.ReserveListDTO">
+	select * from (select rownum rn, A.* from (
+	select sr.room_no, sr.room_nm, r.res_nm, r.res_personnel, r.res_pno,
+	r.res_email, r.res_purpose, r.res_req, r.res_st, r.res_no,
+	to_char(r.use_dt,'""YYYY". "MM". "DD" "HH24":"MI""') as use_dt,
+	to_char(r.use_time,'""YYYY". "MM". "DD" "HH24":"MI""') as use_time,
+	p.pay_m, p.pay_st, rep.reply_st
+	from RESERVE r 
+	join SPACE_ROOM sr 
+	on r.room_no = sr.room_no 
+	join PAY p 
+	on r.res_no = p.res_no
+	join space s 
+	on sr.space_no = s.space_no
+	LEFT join REVIEW rev
+	on r.res_no = rev.res_no
+	LEFT join REPLY rep
+	on rev.rev_no = rep.rev_no
+	where s.member_no=#{member_no} and
+	r.res_st!=4 order by r.res_no desc)A)
+	where rn between #{start} and #{end}
+    </select>
+
+    
+    <!-- 예약리스트 페이징카운트 -->
+    <select id="getlistGuestResCount" resultType="Integer" parameterType="reserveListDTO">
+      select count(*) from reserve r join space_room sr on r.room_no=sr.room_no join space s on sr.space_no = s.space_no join member m on s.member_no = m.member_no where r.res_st!=4 AND s.member_no=#{member_no}
+   </select>
+    
+ 	<!-- Modal예약정보 -->
+ 	<select id="ModalList" parameterType="com.bigdataB.space.dto.ReserveListDTO" resultType="reserveListDTO">
+	select * from reserve where res_no=#{res_no} 
+	</select> 
+ 	<!-- 예약리스트 삭제 (데이터는 남기고 예약 상태-res_st=4로 변경해서 눈속임) -->
+	<update id="deleteReserve" parameterType="int">
+	update reserve set res_st=4 where res_no=#{res_no}
+	</update>
+	
+	<select id="getReview" parameterType="com.bigdataB.space.dto.ReviewDTO" resultType="reviewDTO">
+	select rev.REV_NO, rev.REV_CONTENT, rev.REV_DT, rev.RES_LIKE, rev.RES_IMG, r.RES_NM, r.RES_NO
+	from REVIEW rev
+	join RESERVE r
+	on rev.res_no = r.res_no
+	where r.res_no=#{res_no}
+	</select>
+	<select id="HostPayCheck" parameterType="com.bigdataB.space.dto.PayDTO" resultType="payDTO">
+	select p.PAY_DATE, p.PAY_ST, p.PAY_PR, p.RES_NO 
+	from PAY p join RESERVE r on p.res_no = r.res_no
+	where r.res_no=#{res_no}
+	</select>
+	
+	<insert id="insert_hostReview">
+	insert into reply (REV_NO, REPLY_DT, REPLY_CONTENT, REPLY_ST) values(#{rev_no}, sysdate, #{reply_content}, 2) 
+	</insert>
+	
+	<!-- 결제상태 변경 -->
+	<update id="payChange" parameterType="int">
+	update PAY set pay_st=1, pay_date=sysdate where res_no=#{res_no} 	
+	</update>
+	
+ 	</mapper>

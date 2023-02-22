@@ -1,0 +1,67 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page import="com.bigdataB.space.dto.MemberDTO" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!-- top.jsp -->
+<html>
+<head>
+	<%
+		// Session GET! PIKACHU
+		HttpSession session_guestMember = request.getSession();
+	
+		// null check
+		if ((MemberDTO)session_guestMember.getAttribute("memberdto") != null) {
+			MemberDTO memberdto = (MemberDTO) session_guestMember.getAttribute("memberdto");
+	
+			if (memberdto.getMember_grade() == 1) {
+				session.invalidate();
+				session_guestMember.setAttribute("msg", "로그아웃 되었습니다.");
+				session_guestMember.setAttribute("url", "hostLogin.do");
+				response.sendRedirect("message");
+			}
+		}
+		
+		  int member_no = 0; 
+		  if (session.getAttribute("member_no") != null) {
+		 	  member_no = Integer.parseInt(session.getAttribute("member_no").toString());
+		  }
+		%>
+<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+<link href="resources/bootstrap/guest/guest.css" rel="stylesheet">
+  </head>
+  <body>
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+	<div class="my-0 mr-md-auto font-weight-normal">
+	<a  href="index.do">공간 프로젝트</a>
+	</div>
+	<div class="my-1 my-md-0 mr-md-3">	
+				<form name="f" class="searching" action="search.do?sc=q" method="post">
+				 <c:if test="${empty q}">
+				 <c:set var="searchString" value="검색">
+				 </c:set>
+				 </c:if>
+				 <c:if test="${not empty searchString}">
+				  <c:set var="searchString" value="${q}">
+				 </c:set>
+				 </c:if>
+				<input type="text" name="searchString" placeholder="${q}" width="16">
+					<button type="submit" class="btn btn-secondary">
+			   			<img src="resources/img/guest/search.svg">
+					</button>
+			</form>
+	</div>
+  
+  <nav class="my-2 my-md-0 mr-md-3">
+    <a class="p-2 text-dark" href="guest_reserveList.do">예약정보</a>
+    <a class="p-2 text-dark" href="guest_my_info.do">내정보</a>
+    <a class="p-2 text-dark" href="host_home.do">호스트 홈</a>
+  </nav>
+  <c:if test="${not empty memberdto}">
+  <a class="btn btn-outline-primary" href="guest_logout.do"">logout</a>
+  </c:if>
+  <c:if test="${empty memberdto}">
+  <a class="btn btn-outline-primary" href="guestLogin.do">login</a>
+  </c:if>
+</div>
+</body>
+</html>

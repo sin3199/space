@@ -1,0 +1,37 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+
+<div class="accordion accordion-flush" id="accordionFlushExample">
+	
+	
+	<div class="accordion-item"><span style="font-size: 13px;">
+	<strong><button aria-controls="flush-collapseOne" aria-expanded="false" data-bs-target="#flush-collapseOne" data-bs-toggle="collapse" style="border:0!important; background-color:transparent;" type="button">&nbsp;+ DETAILS</button></strong></span>
+		<div aria-labelledby="flush-headingOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample" id="flush-collapseOne">
+			<div class="accordion-body"><strong><span style="font-size: 13px;">텐셀 70% 울 30%<br>단독 손세탁 권장<br>드라이클리닝 권장<br><br>-비침 있음<br>-신축성 보통<br>-안감 없음<br>-두께감 얇음<br><br> *단독 손세탁 권장 상품입니다.<br> *직사광선과 습기를 피해 통풍이 잘 되는 곳에서 보관해주세요.<br> *이염에 주의하여 주십시오.<br> *열과 수축에 주의하여 주십시오.<br> *건조기 사용을 하면 안됩니다.<br> *코팅 벗겨짐에 주의하여 주십시오.<br> *모니터에 따라 컬러의 오차가 있을 수 있습니다.<br><br></span></strong></div></div></div>
+	
+	
+	<div class="accordion-item"><span style="font-size: 13px;">
+	<strong><button aria-controls="flush-collapseTwo" aria-expanded="false" data-bs-target="#flush-collapseTwo" data-bs-toggle="collapse" style="border:0!important; background-color:transparent;" type="button">&nbsp;+ SIZE GUIDE</button></strong></span>
+		<div aria-labelledby="flush-headingTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample" id="flush-collapseTwo">
+			<div class="accordion-body"><strong><span style="font-size: 13px;">FREE (cm)<br> 총장 70 / 어깨 47 / 가슴 50 / 암홀 27 / 소매기장 58 / 소매단 9 / 밑단 53<br><br>MODEL_LIM KYU RI<br>HEIGHT 172CM<br><br></span></strong></div></div></div>
+	
+	
+	<div class="accordion-item"><span style="font-size: 13px;"><strong>
+	<button aria-controls="flush-collapseThree" aria-expanded="false" data-bs-target="#flush-collapseThree" data-bs-toggle="collapse" style="border:0!important; background-color:transparent;" type="button">&nbsp;+ DELIVERY</button></strong></span>
+		<div aria-labelledby="flush-headingThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample" id="flush-collapseThree">
+			<div class="accordion-body"><span style="font-size: 13px;"><br><br> 배송기간은 주문이후 7~10 일 이후 배송 시작이 되며, 출고가 안될 시 따로 연락드리겠습니다.<br> *추가 오픈될 경우에 해당, 모든 재 오픈 차수 동일<br><br></span></div></div></div></div>
+
+$(.accordion-item).on("click",function(){
+	this.addClassList(".show")
+})
+
+</body>
+</html>

@@ -1,0 +1,210 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.101.0">
+    <title>Product example · Bootstrap v4.6</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.6/examples/product/">
+
+    
+
+    <!-- Bootstrap core CSS servelt-context.xml 참고-->
+	<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+
+
+
+
+    
+  </head>
+  <body>
+    
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+  <a class="navbar-brand" href="/space/host_home.do">Space Platform</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a class="nav-link disabled">건물등록</a>
+      
+    </div>
+  </div>
+  <form class="form-inline">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">로구잉</button>
+  </form>
+
+</nav>
+
+<!-- center// -->
+
+<div class="container">
+
+	<div class="py-5 text-center">
+    <h2>공간 정보를 입력해주세요.</h2>
+    <p class="lead">Below is an example form built entirely with Bootstrap’s form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.</p>
+  </div>
+  <hr class="mb-4">
+  <form class="needs-validation" novalidate>
+	  <div class="mb-3">
+	    <label for="email">건물명 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">건물 부제목 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">건물소개 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="강남빌딩">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">시설안내 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="강남빌딩">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">주의사항 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="강남빌딩">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">건물주소 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="강남빌딩">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">전화번호 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="강남빌딩">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">영업시간 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="강남빌딩">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">휴무일 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="강남빌딩">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">지도경로 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="강남빌딩">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+	  
+	  <div class="mb-3">
+	    <label for="email">사업자등록번호 <span class="text-muted">(Optional)</span></label>
+	    <input type="text" class="form-control" id="email" placeholder="강남빌딩">
+	    <div class="invalid-feedback">
+	      Please enter a valid email address for shipping updates.
+	    </div>
+	  </div>
+  	<hr class="mb-4">
+  	<button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+  </form>
+</div>
+
+<!-- center// -->
+
+<footer class="container py-5">
+  <div class="row">
+    <div class="col-12 col-md">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="d-block mb-2" role="img" viewBox="0 0 24 24" focusable="false"><title>Product</title><circle cx="12" cy="12" r="10"/><path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83m13.79-4l-5.74 9.94"/></svg>
+      <small class="d-block mb-3 text-muted">&copy; Copyright (c) 이젠컴퓨터아카데미(노원). All rights reserved.</small>
+    </div>
+    <div class="col-6 col-md">
+      <h5>Features</h5>
+      <ul class="list-unstyled text-small">
+        <li><a class="text-muted" href="#">Cool stuff</a></li>
+        <li><a class="text-muted" href="#">Random feature</a></li>
+        <li><a class="text-muted" href="#">Team feature</a></li>
+        <li><a class="text-muted" href="#">Stuff for developers</a></li>
+        <li><a class="text-muted" href="#">Another one</a></li>
+        <li><a class="text-muted" href="#">Last time</a></li>
+      </ul>
+    </div>
+    <div class="col-6 col-md">
+      <h5>Resources</h5>
+      <ul class="list-unstyled text-small">
+        <li><a class="text-muted" href="#">Resource</a></li>
+        <li><a class="text-muted" href="#">Resource name</a></li>
+        <li><a class="text-muted" href="#">Another resource</a></li>
+        <li><a class="text-muted" href="#">Final resource</a></li>
+      </ul>
+    </div>
+    <div class="col-6 col-md">
+      <h5>Resources</h5>
+      <ul class="list-unstyled text-small">
+        <li><a class="text-muted" href="#">Business</a></li>
+        <li><a class="text-muted" href="#">Education</a></li>
+        <li><a class="text-muted" href="#">Government</a></li>
+        <li><a class="text-muted" href="#">Gaming</a></li>
+      </ul>
+    </div>
+    <div class="col-6 col-md">
+      <h5>About</h5>
+      <ul class="list-unstyled text-small">
+        <li><a class="text-muted" href="#">Team</a></li>
+        <li><a class="text-muted" href="#">Locations</a></li>
+        <li><a class="text-muted" href="#">Privacy</a></li>
+        <li><a class="text-muted" href="#">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+      <script>window.jQuery || document.write('<script src="/docs/4.6/assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="/docs/4.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+      <script>window.jQuery || document.write('<script src="/docs/4.6/assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="/docs/4.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+
+      
+        <script src="form-validation.js"></script>
+      <!-- https://getbootstrap.com/docs/4.6/examples/checkout/ 보고하기 -->
+  </body>
+</html>

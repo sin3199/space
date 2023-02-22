@@ -1,0 +1,25 @@
+package com.bigdataB.space.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class SpaceDTO	{
+	private int space_no;			// 시퀀스(PK)
+	private String space_nm;		// 건물명
+	private String space_sub_nm;	// 건물부제목
+	private String space_intro;		// 건물소개
+	private String space_guide;		// 시설안내
+	
+	private String precautions;		// 주의사항
+	private String space_addr;		// 건물주소 kakao map
+	private String space_pno;		// 전화번호 
+	private String space_time;		//휴무일
+	private String space_closed_dt;	// 0 은 없음
+	
+	private long space_comnum;		// 사업자번호
+	private int cate_no;			// 카테고리번호(FK)
+	private int member_no;			// 회원번호(FK)
+
+}

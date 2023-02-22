@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="com.bigdataB.space.mapper.guestMapper">
+
+
+	<!-- 검색기 -->
+	<select id="g_listSpace" parameterType="String" resultType="SpaceRoomDTO">
+	select *from space_room sr join space s on sr.space_no=s.space_no JOIN SPACE_TYPE st ON s.CATE_NO =st.CATE_NO
+	WHERE room_st =1 and cate_st=0 and room_nm LIKE '%'||#{q}||'%' or room_no LIKE '%'||#{q}||'%' or ROOM_DESC LIKE '%'||#{q}||'%' or SPACE_SUB_NM LIKE '%'||#{q}||'%' OR SPACE_INTRO LIKE '%'||#{q}||'%' OR SPACE_ADDR LIKE '%'||#{q}||'%' OR cate_nm LIKE '%'||#{q}||'%'
+
+	</select>
+	<!-- main 랜덤 spaceroom 불러오기 위한 리스트 -->
+	<select id="ListSpaceRoom" parameterType="Integer" resultType="SpaceRoomDTO">
+		select *from space_room where room_st=1
+	</select>
+	
+	<!-- 카테고리를 선택해서 들어올 때의 spaceRoom 목록 -->
+	<select id="g_listCate" parameterType="Integer" resultType="SpaceRoomDTO">
+		select *from space_room sr join space s on sr.space_no=s.space_no
+		WHERE cate_no =#{cate_no} and room_st =1
+	</select>
+
+	<!-- 카테고리를 선택해서 들어올 때의 카테고리 이름 노출. -->
+	<select id="g_getCate" parameterType="Integer" resultType="SpaceTypeDTO">
+		select * from space_type where cate_no = #{cate_no}
+	</select>
+
+	<insert id="insertReserve" parameterType="ReserveDTO">
+		insert into reserve
+		(RES_NO, RES_PERSONNEL, RES_NM, RES_PNO, RES_EMAIL, RES_PURPOSE, RES_REQ, USE_DT, RES_ST, USE_TIME, ROOM_NO, MEMBER_NO)
+		 values(res_seq.nextval,#{res_personnel},#{res_nm},#{res_pno},
+	#{res_email},#{res_purpose},#{res_req},TO_DATE(#{use_dt},'YYYY-MM-DD HH24:MI'),
+	0,TO_DATE(#{use_time},'YYYY-MM-DD HH24:MI'),#{room_no},#{member_no})
+	</insert>
+	
+	<!-- 카테고리 목록 -->
+	<select id="g_ListSpaceType" resultType="spaceTypeDTO">
+		select * from space_type where cate_st = 0
+	</select>
+	<!-- categoryview에서 건물을 선택했을 때의 방 정보 -->
+	<select id="g_getSpaceRoom" parameterType="Integer" resultType="SpaceRoomDTO">
+		select * from space_room where room_no = #{room_no}
+	</select>
+	<!-- 찜하기 -->
+	<insert id="AddLike" parameterType="java.util.Map">
+		INSERT INTO SPACE_DIBS (ROOM_NO, MEMBER_NO) VALUES(${room_no}, ${member_no})
+<!-- 	
+		insert into space_dibs values(${room_no},${member_no}) -->
+	</insert>
+	<!-- 안찜하기 -->
+	<delete id="RemoveLike" parameterType="java.util.Map">
+		delete from space_dibs where room_no=${room_no} and member_no = ${member_no}
+	</delete>
+	<!-- SpaceView에서 찜목록 대조용 검색 -->
+	<select id="findLike" parameterType="java.util.Map" resultType="SpaceDibsDTO">
+		select *from space_dibs where room_no=${room_no} and member_no = ${member_no}
+	</select>
+	<!-- 나의 찜목록 리스트 -->
+	<select id="myLikeList" parameterType="Integer" resultType="GuestMyDibsDTO">
+		select sd.member_no, sd.room_no, sr.room_nm, sr.room_desc, sr.room_price, sr.room_img1
+		from SPACE_DIBS sd join SPACE_ROOM sr on sd.room_no = sr.room_no
+		where sd.member_no = #{member_no}
+	</select>
+	<!-- SpaceView에서 Space의 정보 불러오기 -->
+	<select id="g_getSpace" parameterType="Integer" resultType="SpaceDTO">
+		select * from space where space_no = #{space_no}
+	</select>
+	
+	<!-- 맴버 no 해당되는 예약리스트 불러오기 -->
+	<select id="reserveList" parameterType="Integer" resultType="ReserveListDTO">
+		select r.res_no, r.res_personnel, r.res_nm, r.res_pno, r.res_email, r.res_purpose, r.res_req, 
+		r.use_dt, r.res_st, r.use_time, r.room_no, r.member_no, sr.room_nm, sr.room_price, p.pay_date, 
+		sr.room_img1, rv.rev_no , p.pay_pr, p.pay_m, p.pay_st
+		from RESERVE r join SPACE_ROOM sr on r.room_no = sr.room_no join PAY p on r.res_no = p.res_no 
+		left outer join REVIEW rv on r.res_no = rv.res_no
+		where r.member_no = #{member_no} and r.res_st !=4 order by res_no desc
+		
+	</select>
+	
+	<!-- 예약 상세보기 -->
+	<select id="reserveView" parameterType="java.util.Map" resultType="ReserveListDTO">
+		select r.res_no, r.res_personnel, r.res_nm, r.res_pno, r.res_email, r.res_purpose, r.res_req, 
+		r.use_dt, r.res_st, r.use_time, r.room_no, r.member_no, sr.room_nm, sr.room_price, p.pay_date,
+		room_img1, p.pay_pr, p.pay_m, sp.space_addr, sp.space_nm, p.pay_st
+		from RESERVE r join SPACE_ROOM sr on r.room_no = sr.room_no join PAY p on r.res_no = p.res_no 
+		join space sp on sr.space_no = sp.space_no
+		where r.member_no = #{member_no} and r.res_no = #{res_no}
+	</select>
+	
+		<!-- 리뷰 등록 하기 -->
+	<insert id="reviewInsert" parameterType="ReviewDTO">
+		insert into REVIEW (REV_NO, REV_CONTENT,REV_DT,RES_LIKE,RES_IMG,RES_NO)values
+		(REVIEW_SEQ.nextval, #{rev_content}, sysdate, #{res_like}, #{res_img}, #{res_no})
+	</insert>
+	
+	<!-- 내 리뷰 List -->
+	<select id="reviewList" parameterType="Integer" resultType="ReviewMyListDTO">
+		select  rv.rev_no, rv.rev_content, rv.res_like, rv.res_img, r.use_dt, r.res_no, r.room_no, sr.room_nm, sr.room_img1 
+		from RESERVE r join SPACE_ROOM sr on r.room_no = sr.room_no join REVIEW rv on r.res_no = rv.res_no
+		where r.member_no = #{member_no}
+	</select>
+	<!-- 하나의 리뷰 정보 -->
+	<select id="myReview" parameterType="Integer" resultType="ReviewDTO">
+		select * from REVIEW where rev_no = #{rev_no}
+	</select>
+	<!-- 리뷰 수정 -->
+	<update id="reviewEdit" parameterType="ReviewDTO">
+		update REVIEW set res_like = #{res_like}, rev_content = #{rev_content}, res_img = #{res_img},
+		rev_dt = sysdate where rev_no = #{rev_no}
+	</update>
+	<!-- 리뷰 삭제 -->
+	<delete id="reviewDelete" parameterType="Integer">
+		delete from REVIEW where rev_no = #{rev_no}
+	</delete>
+	
+	<!-- 회원 닉네임 변경 -->
+	<update id="member_nm_edit" parameterType="MemberDTO">
+		update Member set member_nm = #{member_nm} where member_no = #{member_no}
+	</update>
+	<!-- 회원 전화번호 변경 -->
+	<update id="member_pno_edit" parameterType="MemberDTO">
+		update Member set member_pno = #{member_pno} where member_no = #{member_no}
+	</update>
+	<!-- 회원 비밀번호 변경 -->
+	<update id="passwdUpdate" parameterType="MemberDTO">
+		update Member set Member_pw = #{member_pw} where member_no = #{member_no}
+	</update>
+	
+	<!-- 방번호 기준 -->
+	<select id="roomtime" parameterType="Integer" resultType="SpaceRoomDTO">
+		select *From space_room where room_no=${room_no}
+	</select>
+		
+	<!-- 결제정보 등록할 때 필요한 res_no -->
+	<select id="getRes_no" parameterType="java.util.Map" resultType="ReserveDTO">
+		select *from reserve where member_no=#{member_no} and room_no = #{room_no} and use_dt=TO_DATE(#{sTime},'YYYY-MM-DD HH24:MI')
+	</select>
+	
+	<!--예약시 결제 정보 등록. -->
+	<insert id="insertPayment" parameterType="java.util.Map">
+		insert into pay values(pay_seq.nextval, #{res_no}, sysdate, #{pay_m}, 0, #{totPrice})
+	</insert>
+	
+	<!-- 예약취소(데이터는 남기고 예약상태만 4로변경)--> 
+	<update id="cancleReserve" parameterType="int">
+	update reserve set res_st=4  where res_no=#{res_no}
+	</update>
+	
+	<select id="getRoomReviewList" resultType="ReviewDTO">
+	SELECT r.rev_no, r.rev_content, r.rev_dt,r.res_like,r.res_img, r2.res_email, r2.res_no , r3.reply_st, r3.reply_content, r3.reply_dt, m.member_nm
+	FROM REVIEW r JOIN RESERVE r2 ON r.RES_NO = r2.RES_NO  JOIN SPACE_ROOM sr ON r2.ROOM_NO = sr.ROOM_NO join member m on r2.member_no = m.member_no
+	LEFT OUTER JOIN reply r3 on r.rev_no=r3.rev_no WHERE sr.room_no=#{room_no}
+	</select>
+	<!-- DATE 타입 추출 -->
+	<!-- 
+	SELECT RES_NO, USE_DT, RES_ST, TO_CHAR(USE_TIME, 'YYYY/MM/DD'), ROOM_NO, MEMBER_NO, TO_CHAR(MM, 'MM') , TO_CHAR("YEAR", 'YYYY'), TO_CHAR(DD,'DD') 
+	FROM RESERVE WHERE RES_NO = 2
+	 -->
+	
+</mapper> 	
+

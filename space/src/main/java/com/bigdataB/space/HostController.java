@@ -1,0 +1,340 @@
+package com.bigdataB.space;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.bigdataB.space.dto.MemberDTO;
+import com.bigdataB.space.dto.PayDTO;
+import com.bigdataB.space.dto.ReplyDTO;
+import com.bigdataB.space.dto.ReserveListDTO;
+import com.bigdataB.space.dto.ReviewDTO;
+import com.bigdataB.space.dto.SpaceDTO;
+import com.bigdataB.space.dto.SpaceTypeDTO;
+import com.bigdataB.space.service.AdminMapper;
+import com.bigdataB.space.service.HostBuildingMapper;
+import com.bigdataB.space.service.SpaceRoomMapper;
+
+/*
+ * 주의사항
+ * 뭔지 나도모름
+ */
+@Controller
+public class HostController {
+	
+	@Autowired
+	private HostBuildingMapper hostBuildingMapper;
+	
+	@Autowired
+	private AdminMapper adminMapper;
+	
+	@Autowired
+	private SpaceRoomMapper spaceRoomMapper;
+
+	@GetMapping("host_home.do")
+	public String host_home(HttpSession session, HttpServletRequest req) {
+		if ((MemberDTO) session.getAttribute("memberdto") == null) {
+		} else if (((MemberDTO) session.getAttribute("memberdto")).getMember_grade() != 1) {
+			session.invalidate();
+		}
+		
+		return "host/host_home";
+	}
+	
+	@RequestMapping("deleteReserve.do")
+	public String deleteReserve(HttpServletRequest req, @ModelAttribute ReserveListDTO rdto) {
+		int res = hostBuildingMapper.deleteReserve(rdto.getRes_no());
+		if (res > 0) {
+			req.setAttribute("msg", "삭제 성공!! 예약 리스트 페이지로 이동합니다.");
+			req.setAttribute("url", "host_guestList.do");
+		} else {
+			req.setAttribute("msg", "삭제 실패!! 예약 리스트 페이지로 이동합니다.");
+			req.setAttribute("url", "host_guestList.do");
+		}
+		return "/message";
+	}
+	
+	
+	@RequestMapping("host_guestList.do")
+	public String listGuestRes(HttpServletRequest req, @RequestParam(required = false) String pageNum) {
+		HttpSession session = req.getSession();
+		MemberDTO memberdto = (MemberDTO)session.getAttribute("memberdto");
+		int member_no = memberdto.getMember_no(); 
+		
+		if (pageNum == null) {
+			pageNum = "1";
+		}
+
+		int currentPage = Integer.parseInt(pageNum);
+		int pageSize = 5;
+		int startRow = (currentPage - 1) * pageSize + 1;
+		int endRow = startRow + pageSize - 1;
+		int countRow = hostBuildingMapper.getlistGuestResCount(member_no);
+		if (endRow > countRow) {
+			endRow = countRow;
+		}
+		
+		List<ReserveListDTO> rlist = hostBuildingMapper.listGuestRes(startRow, endRow, member_no);
+		int page_num = countRow - (startRow - 1);
+		System.out.println(rlist.toString());
+		req.setAttribute("listGuestRes", rlist);
+		req.setAttribute("page_num", page_num);
+		int pageCount = countRow / pageSize + (countRow % pageSize == 0 ? 0 : 1);
+		int pageBlock = 5;
+		int startPage = (currentPage - 1) / pageBlock * pageBlock + 1;
+		int endPage = startPage + pageBlock - 1;
+		if (endPage > pageCount)
+			endPage = pageCount;
+		req.setAttribute("pageCount", pageCount);
+		req.setAttribute("pageBlock", pageBlock);
+		req.setAttribute("startPage", startPage);
+		req.setAttribute("endPage", endPage);
+		
+		return "host/host_guestList";
+	}
+	
+	@RequestMapping(value="res.do") //Modal창에 띄울 데이터(예약상세정보)(from main2.js)
+	public @ResponseBody Map<String,Object>  resdo (HttpServletRequest req, @ModelAttribute ReserveListDTO dto){
+		ReserveListDTO rsldto= hostBuildingMapper.ModalList(dto);
+		System.out.println(dto);
+		System.out.println("aaa: " +dto.getRes_no());
+		Map<String,Object> resMap = new HashMap<String,Object>();
+		resMap.put("resMap",rsldto);
+		return resMap;
+		}
+	
+
+	  @RequestMapping(value="host_paycheck.do") //Modal3333창에 띄울 데이터(결제금액정보)(from main2.js)
+	public @ResponseBody Map<String,Object> HostPayCheck(HttpServletRequest req, @ModelAttribute PayDTO pdto){
+		PayDTO paydto= hostBuildingMapper.HostPayCheck(pdto);
+		System.out.println("aaa: " +pdto.getRes_no()); 
+		System.out.println("bbb: "+paydto.getPay_date());
+		System.out.println("rrrrr: "+paydto.getPay_st());
+
+		Map<String,Object> resPayMap = new HashMap<String,Object>();
+		resPayMap.put("resPayMap",paydto);
+		return resPayMap;
+	}
+	  
+		@RequestMapping("payChange.do")//(현장결제시 결제상태-pay_st 변경)
+		public String payChange(HttpServletRequest req, @ModelAttribute PayDTO pdto) {
+			int res = hostBuildingMapper.payChange(pdto.getRes_no());
+			if (res > 0) {
+				req.setAttribute("msg", "결제 상태 변경 성공!! 예약 리스트 페이지로 이동합니다.");
+				req.setAttribute("url", "host_guestList.do");
+			} else {
+				req.setAttribute("msg", "오류발생!! 예약 리스트 페이지로 이동합니다.");
+				req.setAttribute("url", "host_guestList.do");
+			}
+			return "/message";
+		}
+	  
+	@RequestMapping(value = "review.do") // Modal2222창에 띄울 데이터(후기정보)(from main2.js)
+	public @ResponseBody Map<String, Object> reviewdo(HttpServletRequest req, @ModelAttribute ReviewDTO dto) {
+		ReviewDTO reviewdto = hostBuildingMapper.getReview(dto);
+		Map<String, Object> reviewMap = new HashMap<String, Object>();
+		reviewMap.put("reviewMap", reviewdto);
+		System.out.println(reviewMap);
+		System.out.println(reviewMap.get("reviewMap"));
+		return reviewMap;
+
+	}
+
+	@GetMapping("host_buildingAdd.do")
+	public String host_buildingAdd(HttpServletRequest req,@RequestParam Map<String,Object> map) {
+		if(!map.containsKey("sort")) {
+			map.put("sort","asc");
+		}
+		List<SpaceTypeDTO> list = adminMapper.listCate(map);
+		req.setAttribute("listCate", list);
+		return "host/host_buildingAdd";
+	}
+
+	@RequestMapping("host_info_update.do")
+	public String host_info_update(HttpServletRequest req) {
+		
+		return "host/host_info_update";
+	}
+	
+
+	@RequestMapping("host_info_update_ok.do")
+	public String updateHost_Info(HttpServletRequest req, @ModelAttribute MemberDTO mdto) {
+		
+		int res = hostBuildingMapper.updateHost_Info(mdto);
+		if (res > 0) {
+			req.setAttribute("msg", "수정 성공!! 로그아웃합니다.");
+			HttpSession session = req.getSession();
+			session.invalidate();
+			req.setAttribute("url", "host_home.do");
+		} else {
+			req.setAttribute("msg", "수정 실패!! 호스트홈페이지로 이동합니다.");
+			req.setAttribute("url", "host_home.do");
+		}
+
+		return "/message";
+	}
+
+	@PostMapping("host_buildingAdd.do")
+	public String host_buildingAddPro(HttpServletRequest req, @ModelAttribute SpaceDTO sdto) {
+		int res = hostBuildingMapper.insertHostBuilding(sdto);
+		if (res > 0) {
+			req.setAttribute("msg", "건물등록성공 리스트페이지로 이동합니다.");
+			req.setAttribute("url", "host_buildingList.do");
+		} else {
+			req.setAttribute("msg", "건물등록실패! 리스트페이지로 이동합니다.");
+			req.setAttribute("url", "host_buildingList.do");
+		}
+		return "/message";
+	}
+
+	
+	@RequestMapping(value = "host_buildingFix.do")
+	public String host_buildingFix(HttpServletRequest req, @ModelAttribute SpaceDTO sdto, @RequestParam Map<String,Object> map) {
+		
+		if(!map.containsKey("sort")) {
+			map.put("sort","asc");
+		}
+		List<SpaceTypeDTO> list = adminMapper.listCate(map);
+		req.setAttribute("listCate", list);
+		
+		sdto = hostBuildingMapper.getHostBuilding(sdto.getSpace_no());
+		req.setAttribute("gethostBuilding", sdto);
+		
+		return "host/host_buildingFix";
+	}
+	
+	
+	@RequestMapping(value = "host_buildingFix_ok.do")
+	public String host_buildingFix_ok(HttpServletRequest req, @ModelAttribute SpaceDTO sdto) {
+
+		int res = hostBuildingMapper.updateHostBuilding(sdto);
+		if (res > 0) {
+			req.setAttribute("msg", "건물정보 수정 성공! 리스트로 이동합니다.");
+			req.setAttribute("url", "host_buildingList.do");
+
+		} else {
+			req.setAttribute("msg", "건물정보 수정 실패! 리스트로 이동합니다.");
+			req.setAttribute("url", "host_buildingList.do");
+		}
+		
+		return "/message";
+	}
+
+
+	@RequestMapping(value = "host_buildingList.do")
+	public String listHostBuilding(HttpServletRequest req, @RequestParam(required = false) String pageNum) {
+		HttpSession session = req.getSession();
+		MemberDTO memberdto = (MemberDTO)session.getAttribute("memberdto");
+		int member_no = memberdto.getMember_no(); // 바꿔야됨
+
+		if (pageNum == null) {
+			pageNum = "1";
+		}
+		int currentPage = Integer.parseInt(pageNum);
+		int pageSize = 5; // page number?
+		int startRow = (currentPage - 1) * pageSize + 1;
+		int endRow = startRow + pageSize - 1;
+		int countRow = hostBuildingMapper.getHostBuildingCount(member_no);
+
+		if (endRow > countRow) {
+			endRow = countRow;
+		}
+		
+		List<SpaceDTO> srlist = hostBuildingMapper.listHostBuilding(startRow, endRow, member_no);
+		int page_no = countRow - (startRow - 1);
+		req.setAttribute("listHostBuilding", srlist);
+		req.setAttribute("page_no", page_no);
+		int pageCount = countRow / pageSize + (countRow % pageSize == 0 ? 0 : 1);
+		int pageBlock = 5;
+		int startPage = (currentPage - 1) / pageBlock * pageBlock + 1;
+		int endPage = startPage + pageBlock - 1;
+
+		if (endPage > pageCount) {
+			endPage = pageCount;
+		}
+
+		
+		req.setAttribute("pageCount", pageCount);
+		req.setAttribute("pageBlock", pageBlock);
+		req.setAttribute("startPage", startPage);
+		req.setAttribute("endPage", endPage);
+		
+		
+
+		return "host/host_buildingList";
+	}
+
+	@RequestMapping("host_buildingDelete.do")
+	public String host_buildingDelete(HttpServletRequest req, @ModelAttribute SpaceDTO sdto) {
+		
+		int result = spaceRoomMapper.getRoomCount(sdto.getSpace_no());
+		
+		if(result == 0) {
+			int res = hostBuildingMapper.deleteHostBuilding(sdto.getSpace_no());
+			if (res > 0) {
+				req.setAttribute("msg", "삭제 성공!! 건물 목록 페이지로 이동합니다.");
+				req.setAttribute("url", "host_buildingList.do");
+			} else {
+				req.setAttribute("msg", "삭제 실패!! 건물 목록 페이지로 이동합니다.");
+				req.setAttribute("url", "host_buildingList.do");
+			}
+		} else {
+			req.setAttribute("msg", "방을 먼저 삭제해주세요.");
+			req.setAttribute("url", "host_buildingList.do");
+		}
+		
+
+		return "/message";
+	}
+	
+	@RequestMapping("host_buildingCheck.do")
+	public String host_buildingCheck(HttpServletRequest req, @ModelAttribute ReviewDTO reviewdto) {
+		int res = hostBuildingMapper.insert_hostReview(reviewdto);
+		
+		if (res > 0) {
+			req.setAttribute("msg", "답글등록 성공! 리스트로 이동합니다.");
+			req.setAttribute("url", "host_guestList.do");
+
+		} else {
+			req.setAttribute("msg", "답글등록 실패! 리스트로 이동합니다.");
+			req.setAttribute("url", "host_guestList.do");
+		}
+		return "/message";
+	}
+	
+	@RequestMapping("host_review_ok.do")
+	public String host_review_ok(HttpServletRequest req, @ModelAttribute ReviewDTO reviewdto) {
+		System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		int res = hostBuildingMapper.insert_hostReview(reviewdto);
+		if (res > 0) {
+			req.setAttribute("msg", "후기등록 성공! 리스트로 이동합니다.");
+			req.setAttribute("url", "host_guestList.do");
+
+		} else {
+			req.setAttribute("msg", "건물정보 수정 실패! 리스트로 이동합니다.");
+			req.setAttribute("url", "host_guestList.do");
+		}
+		
+		return "message";
+	}
+
+	
+	
+	//   ^  ^
+	// (๑◕ܫ◕๑)
+	//   ●  ●
+
+	
+}

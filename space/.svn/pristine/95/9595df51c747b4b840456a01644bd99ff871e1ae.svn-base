@@ -1,0 +1,76 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+<%@ include file="../host_top.jsp"%>
+
+<!-- center// -->
+
+<div class="container">
+
+	<div class="py-5 text-center">
+	  <h2>손ㄴ ㅣ ㅁ 받 ㅇ ㅏ ㄹ ㅏ</h2>
+	  <p class="lead">Below is an example form built entirely with Bootstrap’s form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.</p>
+	</div>
+	
+  <hr class="mb-4">
+
+
+	<table class="table">
+	  <thead class="thead-dark">
+	    <tr>
+	      <th scope="col">방이름</th>
+	      <th scope="col">예약자명</th>
+	      <th scope="col">인원수</th>
+	      <th scope="col">예약자연락처</th>
+	      <th scope="col">예약자이메일</th>
+	      <th scope="col">사용목적</th>
+	      <th scope="col">요청사항</th>
+	      <th scope="col">결제수단</th>
+	      <th scope="col">결제상태</th>
+	      <th scope="col">방이용일</th>
+	      <th scope="col">삭제요청</th>
+	      <th scope="col">삭제버튼</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr>
+	      <td>서울만남</td>
+	      <td>홍길동</td>
+	      <td>23</td>
+	      <td>1010-444-444</td>
+	      <td>234@naver.com</td>
+	      <td>"잘라고"</td>
+	      <td>"조식 좀 줘바"</td>
+	      <td>무통장입금</td>
+	      <td>미입금</td>
+	      <td>4일</td>
+	      <td> - </td>
+	      <td><button>삭제</button></td>
+	    </tr>
+	
+	  </tbody>
+	</table>
+
+	<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li class="page-item"><a class="page-link text-dark" href="#">1</a></li>
+    <li class="page-item"><a class="page-link text-dark" href="#">2</a></li>
+    <li class="page-item"><a class="page-link text-dark" href="#">3</a></li>
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+</div>
+
+
+<!-- center// -->
+
+<%@ include file="../host_bottom.jsp"%>

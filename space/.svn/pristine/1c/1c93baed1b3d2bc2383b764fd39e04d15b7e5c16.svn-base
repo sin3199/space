@@ -1,0 +1,91 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>  
+<%@ include file="top.jsp"%>
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>게스트 홈</title>
+</head>
+<body>
+
+	<div class="container-lg">
+		<div id="g-main-slides" class="carousel slide" data-ride="carousel">
+			<ol class="carousel-indicators">
+				<li data-target="#g-main-slides" data-slide-to="0" class="active"></li>
+				<li data-target="#g-main-slides" data-slide-to="1"></li>
+				<li data-target="#g-main-slides" data-slide-to="2"></li>
+			</ol>
+			<div class="carousel-inner">
+				<div class="carousel-item active">
+					<a href="workingonit.do"> <img
+						src="resources/img/guest/cafe4.jpg" class="d-block w-100 h-10"
+						alt="...">
+						<div class="carousel-caption d-none d-md-block">
+							<h5>광고용 일까?</h5>
+							<p>뭔 내용을 써야하나?</p>
+						</div>
+					</a>
+				</div>
+				<div class="carousel-item">
+					<a href="workingonit.do"> <img
+						src="resources/img/guest/cafe2.jpg" class="d-block w-100 h-10"
+						alt="...">
+						<div class="carousel-caption d-none d-md-block">
+							<h5>공지사항??????</h5>
+							<p>뭘 써야할지 몰?루</p>
+						</div>
+					</a>
+				</div>
+				<div class="carousel-item">
+					<a href="workingonit.do"> <img
+						src="resources/img/guest/cafe3.jpg" class="d-block w-100 h-10"
+						alt="...">
+						<div class="carousel-caption d-none d-md-block">
+							<h5>이벤트???????</h5>
+							<p>이벤트용으로 써야하나?</p>
+						</div>
+					</a>
+				</div>
+			</div>
+			<button class="carousel-control-prev" type="button"
+				data-target="#g-main-slides" data-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="sr-only">Previous</span>
+			</button>
+			<button class="carousel-control-next" type="button"
+				data-target="#g-main-slides" data-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="sr-only">Next</span>
+			</button>
+		</div>
+		<form name="f" action="guest_categoryView.do" method="post">
+			<div class="row">
+				<c:if test="${empty listSpaceType}">
+					<tr>
+						<td colspan="3">카테고리가 없습니다.</td>
+					</tr>
+				</c:if>
+				<c:forEach var="dto" items="${listSpaceType}">
+
+					<div align="center" class="col-lg-2 col-md-3 col-auto" style="margin-bottom: 10px;">
+						<a href="guest_categoryView.do?cate_no=${dto.cate_no}">
+							<div class="card" style="width: 8rem;">
+								<img src="${pageContext.request.contextPath}/resources/img/cateIcon/${dto.cate_img}" class="card-img-top"
+									alt="...">
+								<div class="badge badge-primary text-wrap" style="width: 8rem;">
+									${dto.cate_nm}</div>
+							</div>
+						</a>
+					</div>
+				</c:forEach>
+
+			</div>
+		</form>
+	</div>
+
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+package com.bigdataB.space.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+
+//예약 리스트 목록을 만들기 위한 DTO
+@Getter
+@Setter
+public class ReserveListDTO {
+	private int res_no;					//RESERVE 의 예약번호
+	private String res_personnel;	//예약 인원
+	private String res_nm;				//예약자 명
+	private String res_pno;			//예약자 연락처
+	private String res_email;			//이메일
+	private String res_purpose;		//사용목적
+	private String res_req;				//요청사항
+	private String use_dt;				//시작 시간
+	private int res_st;					//예약 상태
+	private String use_time;			//종료 시간
+	private int room_no;				
+	private int member_no;
+	private String room_nm; 		// SPACE_ROOM 의 방 명
+	private int room_price; 		// SPACE_ROOM 의 방 가격
+	private String room_img1;	// SPACE_ROOM 의 이미지
+	
+	private String pay_date;	//PAY 의 결제일
+	private int pay_m; 	//PAY 의 결제수단
+	private int pay_st;		//PAY 의 결제상태
+	private String rev_no;	//REVIEW의 이용후기 번호
+	private String pay_pr;		//결제 금액
+	private String space_addr;
+	private String space_nm;
+	private int reply_st;
+
+}

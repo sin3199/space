@@ -1,0 +1,20 @@
+package com.bigdataB.space.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class ReserveDTO {
+	private int res_no;
+	private String res_personnel;
+	private String res_nm;
+	private String res_pno;
+	private String res_email;
+	private String res_purpose;
+	private String res_req;
+	private String use_dt;
+	private int res_st;
+	private int member_no;
+	private int room_no;
+}

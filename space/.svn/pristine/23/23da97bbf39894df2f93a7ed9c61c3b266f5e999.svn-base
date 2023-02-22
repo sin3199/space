@@ -1,0 +1,31 @@
+$(document).ready(function(){
+	$("#guest_reserve").ckick(function(){
+		guest_reserve();
+	})
+	$(document).on("click", "#'sys_day'", function(){
+		daycheck();
+	})
+})
+
+function daycheck(){
+	var r_no = $("#room_no").val();
+	$.ajax({
+		type : "post",
+		url : "daycheck.do",
+		dateType : "json",
+		data :{
+			room_no	: r_no
+		},
+		success : function(res){
+			console.log(res.SRoom);
+		},
+		error : function(err){
+			console.log(err);
+		}
+			
+	});
+}
+
+function guest_reserve(){
+	
+}

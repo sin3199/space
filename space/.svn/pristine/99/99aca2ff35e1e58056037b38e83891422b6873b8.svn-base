@@ -1,0 +1,66 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+	 <link href="resources/bootstrap/css/bootstrap.css" rel="stylesheet">
+	<title>space</title>
+</head>
+<body>
+	<div>
+		<ul>
+		<li>
+		<a href="guest_main.do">게스트 메인가기</a>
+		</li>
+		<li>
+		<a href="host_home.do">호스트 메인가기</a>
+		</li>
+		<li>		
+		<a href="hostLogin.do">호스트로그인</a>
+		</li>
+		<li>		
+		<a href="guestLogin.do">게스트로그인</a>
+		</li>
+		<li>
+		<a href="admin_main.do">관리자</a>
+		</li>
+		<li>
+		<a href="cal.do">달력</a>
+		</li>
+		<li>
+		<a href="/category_sort.do?pageNum=3">호잇</a>
+		</li>
+		
+		
+			<a href="room_input.do" class="btn btn-primary btn-lg" value="방등록">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-flag"></i>
+                                        </span>
+                                        <span class="text">방 등록</span>
+                                    </a>
+                                    
+                                    	<a href="room_list.do" class="btn btn-primary btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-flag"></i>
+                                        </span>
+                                        <span class="text">방 관리목록</span>
+                                    </a>
+                                    <a href="room_update.do" class="btn btn-primary btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-flag"></i>
+                                        </span>
+                                        <span class="text">방 수정 페이지</span>
+                                    </a>
+		
+		
+	</ul>
+	</div>
+	
+	<script src="resources/js/jquery.js" ></script>
+    <script type="text/javascript" src="resources/bootstrap/js/bootstrap.bundle.js" ></script>
+    <script src="resources/bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
+	
+</body>
+</html>
+
+

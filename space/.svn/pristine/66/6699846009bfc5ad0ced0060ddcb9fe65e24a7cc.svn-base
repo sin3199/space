@@ -1,0 +1,105 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+<%@ include file="../host_top.jsp"%>
+
+<!-- center// -->
+
+<div class="container">
+
+	<div class="py-5 text-center">
+	  <h2>예약 리스트</h2>
+	  <p class="lead">Below is an example form built entirely with Bootstrap’s form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.</p>
+	</div>
+	
+  <hr class="mb-4">
+
+<form name ="r" action="host_guestList.do" method="post">
+	<table class="table" style="text-align: center;">
+	  <thead class="thead-dark">
+	    <tr>
+	      <th scope="col">NO.</th>
+	      <th scope="col">방이름</th>
+	      <th scope="col">예약자명</th>
+	       <th scope="col">예약정보</th>
+	    <!--  <th scope="col">인원수</th>
+	      <th scope="col">예약자연락처</th>
+	      <th scope="col">예약자이메일</th>
+	      <th scope="col">사용목적</th>
+	      <th scope="col">요청사항</th>
+	      <th scope="col">결제수단</th>
+	      <th scope="col">결제상태</th>
+	      <th scope="col">이용 시작일</th>
+	      <th scope="col">이용 종료일</th>-->  
+	      <th scope="col">삭제요청</th>
+	      <th scope="col">삭제버튼</th>
+	    </tr>
+	  </thead>
+	 <tbody>
+	  
+	  <c:if test="${empty listGuestRes}">
+					<tr>
+						<td colspan="6">예약된 방이 없습니다.</td>
+					</tr>
+		</c:if>
+		<c:set var="page_num" value="${requestScope.page_num}" />
+		<c:forEach var="rdto" items="${listGuestRes}">
+	    <tr>
+	    <th><c:out value="${page_num}" />
+				<c:set var="page_num" value="${page_num-1}" /></th>
+	      <td>${rdto.room_nm}</td>
+	      <td>${rdto.res_nm}</td>
+	       <td><button class="btn-modal" data-toggle="modal" data-target="#myModal" data-backdrop="static">상세보기</button>
+	       		 </td>
+	    <!--  <td>${rdto.res_personnel}</td>
+	      <td>${rdto.res_pno}</td>
+	      <td>${rdto.res_email}</td>
+	      <td>${rdto.res_purpose}</td>
+	      <td>${rdto.res_req}</td>
+	      <td>${rdto.pay_m}</td>
+	      <td>${rdto.pay_st}</td>
+	      <td><fmt:formatDate value="${rdto.use_dt}"
+								pattern="yyyy년MM월dd일HH시mm분 " /></td>
+	      <td><fmt:formatDate value="${rdto.use_time}"
+								pattern="yyyy년MM월dd일HH시mm분 " /></td>
+								  -->
+	      <td>${rdto.res_st} </td>
+	      <td><button>삭제</button></td>
+	    </tr>
+	    
+		</c:forEach>
+	  </tbody>
+	</table>
+</form>
+
+	<nav aria-label="Page navigation example">
+	  <ul class="pagination justify-content-center">
+	  
+	  <c:if test="${not empty listGuestRes}">	
+	  <!-- Previous -->
+	    <li class="page-item">
+	      <a class="page-link text-dark" href="host_guestList.do?pageNum=${startPage}">
+	        <span aria-hidden="true">&laquo;</span>
+	      </a>
+	    </li>
+	    
+	    <!-- 123 -->
+    	<c:forEach var="i" begin="${startPage}" end="${endPage}">
+			<li class="page-item">
+			<a class="page-link text-dark" href="host_guestList.do?pageNum=${i}">${i}</a></li>
+		</c:forEach>
+		
+		<!-- Next -->
+	    <li class="page-item">
+	      <a class="page-link text-dark" href="host_guestList.do?pageNum=${endPage}">
+	        <span aria-hidden="true">&raquo;</span>
+	      </a>
+	    </li>
+	     </c:if>
+	  </ul>
+	</nav>
+</div>
+
+<!-- center// -->
+
+<%@ include file="../host_bottom.jsp"%>

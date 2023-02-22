@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 	<!-- 테이블 명 변경 해야함
+ 		 test2 = category
+ 		 membertest = member
+ 		  -->
+<mapper namespace="com.bigdataB.space.mapper.adminMapper">
+	<insert id="insertCate" parameterType="spaceTypeDTO">
+		insert into space_type values(seq_space_type.nextval, #{cate_nm}, #{cate_img}, 0)
+	</insert>
+
+
+	<select id="listCate" resultType="spaceTypeDTO">
+		select * from space_type
+	</select> 
+	<select id="sortCate" parameterType="java.util.Map" resultType="spaceTypeDTO">
+		select cate_nm, cate_img
+			from space_type
+				order by cate_nm ${sort}
+	</select>
+	
+	
+	<select id="listHost" parameterType="java.util.Map" resultType="hostListDTO">
+		select m.member_nm, m.member_email, m.member_pw, m.member_reg_dt, m.member_pno, s.space_nm, s.space_comnum
+			from member m join space s on m.member_no = s.member_no where m.member_grade = 1
+			order by ${column} ${sort}
+	</select>
+	<select id="sortHost" parameterType="java.util.Map" resultType="hostListDTO">
+		select m.member_nm, m.member_email, m.member_pw, m.member_reg_dt, m.member_pno, s.space_nm , s.space_comnum
+			from member m join space s on m.member_no = s.member_no where m.member_grade = 1
+			order by ${column} ${sort}
+	</select>
+
+	
+	<select id="listGuest" parameterType="String" resultType="memberDTO">
+		select member_no, member_email, member_pw, member_nm, member_pno, member_reg_dt
+		 from member where member_grade = 0
+	</select> 
+	<select id="sortGuest" parameterType="java.util.Map" resultType="memberDTO">
+		select member_no, member_email, member_pw, member_nm, member_pno, member_reg_dt
+		 from member where member_grade = 0
+			order by ${column} ${sort} 
+	</select>
+	
+	
+	<select id="listSpaceRoom" resultType="roomListDTO">
+		select m.member_nm, st.cate_nm, sr.room_nm, to_char(sr.room_price,'FM999,999,999') as room_price, sr.room_fit, sr.room_desc, sr.room_img1, to_char(sr.room_time, '""HH24"시 "MI"분"') as room_time, to_char(sr.room_date , '""YYYY"년 "MM"월 "DD"일"') as room_date 
+		from space_room sr, space s, space_type st, member m 
+		where sr.space_no = s.space_no and m.member_no = s.member_no and st.cate_no = s.cate_no
+	</select>
+	<select id="listSpaceRoomSort" parameterType="java.util.Map" resultType="roomListDTO">
+		select m.member_nm, st.cate_nm, sr.room_nm, to_char(sr.room_price,'FM999,999,999') as room_price, sr.room_fit, sr.room_desc, sr.room_img1, to_char(sr.room_time, '""HH24"시 "MI"분"') as room_time, to_char(sr.room_date , '""YYYY"년 "MM"월 "DD"일"') as room_date 
+		from space_room sr, space s, space_type st, member m 
+		where sr.space_no = s.space_no and m.member_no = s.member_no and st.cate_no = s.cate_no
+		order by ${column} ${sort}
+	</select>
+		
+		
+	
+	<select id="listReserve" resultType="reservedRoomDTO">
+		select res.res_nm, sr.room_nm, to_char(res.use_dt,'""YYYY"년 "MM"월 "DD"일"') as use_dt, to_char(res.use_time,'""HH24"시 "MM"분"') as use_time, space_pno ,res_pno,
+				res.res_email, res.res_personnel, res.res_st
+		from reserve res, space_room sr, member m, space s
+		where res.room_no = sr.room_no and s.space_no = sr.space_no and res.member_no = m.member_no
+	</select>
+	<select id="sortReserve" parameterType="java.util.Map" resultType="reservedRoomDTO">
+		select res.res_nm, sr.room_nm, to_char(res.use_dt,'""YYYY"년 "MM"월 "DD"일"') as use_dt, to_char(res.use_time,'""HH24"시 "MM"분"') as use_time, s.space_pno, res.res_pno, 
+				res.res_email, res.res_personnel,
+				CASE res.res_st WHEN 0 THEN '예약확정 대기중'
+								WHEN 1 THEN '예약취소'
+								WHEN 2 THEN '예약완료'
+								ELSE '모름'
+								END AS res_st
+		from reserve res, space_room sr, member m, space s
+		where res.room_no = sr.room_no and s.space_no = sr.space_no and res.member_no = m.member_no
+		order by ${column} ${sort}
+	</select>
+	
+	
+	
+	<!-- <select id="sortGuest" resultType="Object">
+        select * from member
+        <if test="pageable.sort.sorted">
+            <trim prefix="order by">
+                <foreach item="order" index="i" collection="pageable.sort" separator=", ">
+                    ${order.property} ${order.direction}
+                </foreach>
+            </trim>
+        </if>
+        limit ${pageable.size} offset ${pageable.page}*${pageable.size}
+    </select> -->
+		
+	<!-- 	
+	<select id="listHost" resultType="memberDTO">
+		select member_no, member_email, member_pw, member_nm, member_pno, member_reg_dt 
+		from member where member_grade = 1
+		
+		
+	</select> -->
+	
+	<!-- <select id="listSpaceRoom" resultType="spaceRoomDTO">
+		select * from space_room
+	</select> -->
+</mapper>

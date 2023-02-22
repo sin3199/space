@@ -1,0 +1,17 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<c:forEach var="result" items="${listSpaceRoomSort}" varStatus="status">
+	<tr>
+		<td>${result.member_nm}</td>
+		<td>${result.cate_nm}</td>
+		<td>${result.room_nm}</td>
+		<td><fmt:formatNumber value="${result.room_price}" pattern="#,#00 원"/></td>
+		<td>${result.room_fit} 명</td>
+		<td>${result.room_desc}</td>
+		<td>${result.room_img1}</td>
+		<td><fmt:formatDate value="${result.room_time}" pattern="HH시 mm분"/></td>
+		<td><fmt:formatDate value="${result.room_date}" pattern="yyyy년 MM월 dd일"/></td>
+		<td>삭제</td>
+	</tr>
+</c:forEach>

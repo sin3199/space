@@ -1,0 +1,163 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page import="com.bigdataB.space.dto.MemberDTO" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.101.0">
+    <title>123123나중에 이런것도 하나하나 체크</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.6/examples/product/">
+
+    
+
+    <!-- Bootstrap core CSS servelt-context.xml 참고-->
+	<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+	<%
+		// Session GET! PIKACHU
+		HttpSession session_BuildingList = request.getSession();
+
+		/*
+			null check
+			
+			.jsp 에서 세션이 살아 있는지 체크할 때 대체로는
+			if(session==null){ ... } 과 같이 null 만 체크한다.
+			그런데, session.invalidate(); 를 실행할 때는.. session!=null 인 상태다.
+			그러므로,
+			if(session==null || !request.isRequestedSessionIdValid()){ ... } 와 같이 
+			isRequestedSessionIdValid() 를 추가한다.
+		*/
+		
+		
+		if ((MemberDTO)session_BuildingList.getAttribute("memberdto") != null) {
+			MemberDTO memberdto = (MemberDTO) session_BuildingList.getAttribute("memberdto");
+	
+			if (memberdto.getMember_grade() == 0) {
+				session.invalidate();
+				session_BuildingList.setAttribute("msg", "로그아웃 되었습니다.");
+				session_BuildingList.setAttribute("url", "hostLogin.do");
+				response.sendRedirect("message");
+			}
+		}
+	%>
+
+</head>
+  <body>
+    
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+  <a class="navbar-brand" href="/space/host_home.do">호수 홈</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a class="nav-link active" href="host_home.do">Home <span class="sr-only">(current)</span></a>
+      <a class="nav-link" href="guest.do">guest</a>
+      <a class="nav-link" href="host_guestList.do">예약리스트</a>
+      <a class="nav-link" href="host_info_update.do">내정보</a>
+      <c:if test="${empty memberdto}">
+      	<a class="nav-link" href="host_buildingList.do?member_no=0">건물리스트</a>
+      </c:if>
+      <c:if test="${not empty memberdto}">
+      	<a class="nav-link" href="host_buildingList.do?member_no=${memberdto.member_no}">건물리스트</a>
+      </c:if>
+      <a class="nav-link" href="host_buildingAdd.do">건물등록</a>
+      <a class="nav-link disabled">Disabled</a>
+      
+    </div>
+  </div>
+
+
+  <c:if test="${empty memberdto}">
+	<form class="form-inline" action="hostLogin.do">
+		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Login</button>
+	</form>
+  </c:if>
+  <c:if test="${not empty memberdto}">
+	<form class="form-inline" action="host_logout.do">
+		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logout</button>
+	</form>
+  </c:if>
+		
+
+	</nav>
+
+
+<!-- center// -->
+
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+  <div class="col-md-11 p-lg-5 mx-auto my-5">
+    <h1 class="display-6 font-weight-normal">예약부터 마케팅까지, <br>저희와 함께하세요</h1>
+    <p class="lead font-weight-normal">저희와 함께라면 호스트님의 공간 비지니스가 더 편리해집니다.<br> 나만의 고객을 만나시고, 광고, 통계, 정산 보고서를 통해 <br>데이터 기반의 사업을 만들어가세요.</p>
+    <a class="btn btn-outline-secondary" href="host_buildingAdd.do">호스트 공간 시작하기</a>
+  </div>
+  <div class="product-device shadow-sm d-none d-md-block"></div>
+  <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
+</div>
+
+
+<!-- center// -->
+
+
+<footer class="container py-5">
+  <div class="row">
+    <div class="col-12 col-md">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="d-block mb-2" role="img" viewBox="0 0 24 24" focusable="false"><title>Product</title><circle cx="12" cy="12" r="10"/><path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83m13.79-4l-5.74 9.94"/></svg>
+      <small class="d-block mb-3 text-muted">&copy; Copyright (c) 이젠컴퓨터아카데미(노원). All rights reserved.</small>
+    </div>
+    <div class="col-6 col-md">
+      <h5>Features</h5>
+      <ul class="list-unstyled text-small">
+        <li><a class="text-muted" href="#">Cool stuff</a></li>
+        <li><a class="text-muted" href="#">Random feature</a></li>
+        <li><a class="text-muted" href="#">Team feature</a></li>
+        <li><a class="text-muted" href="#">Stuff for developers</a></li>
+        <li><a class="text-muted" href="#">Another one</a></li>
+        <li><a class="text-muted" href="#">Last time</a></li>
+      </ul>
+    </div>
+    <div class="col-6 col-md">
+      <h5>Resources</h5>
+      <ul class="list-unstyled text-small">
+        <li><a class="text-muted" href="#">Resource</a></li>
+        <li><a class="text-muted" href="#">Resource name</a></li>
+        <li><a class="text-muted" href="#">Another resource</a></li>
+        <li><a class="text-muted" href="#">Final resource</a></li>
+      </ul>
+    </div>
+    <div class="col-6 col-md">
+      <h5>Resources</h5>
+      <ul class="list-unstyled text-small">
+        <li><a class="text-muted" href="#">Business</a></li>
+        <li><a class="text-muted" href="#">Education</a></li>
+        <li><a class="text-muted" href="#">Government</a></li>
+        <li><a class="text-muted" href="#">Gaming</a></li>
+      </ul>
+    </div>
+    <div class="col-6 col-md">
+      <h5>About</h5>
+      <ul class="list-unstyled text-small">
+        <li><a class="text-muted" href="#">Team</a></li>
+        <li><a class="text-muted" href="#">Locations</a></li>
+        <li><a class="text-muted" href="#">Privacy</a></li>
+        <li><a class="text-muted" href="#">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+      <script>window.jQuery || document.write('<script src="/docs/4.6/assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="/docs/4.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+
+      
+  </body>
+</html>

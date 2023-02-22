@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+ 	
+ 	<mapper namespace="com.bigdataB.space.mapper.HostBuildingMapper.xml">
+ 	
+ 	<select id="listHostBuilding" parameterType="java.util.Map" resultType="spaceDTO">
+ 		select * from (select rownum rn, A.* from (select * from space order by space_no asc)A) where rn between #{start} and #{end}
+ 	</select>
+ 	
+ 	<insert id="insertHostBuilding" parameterType="spaceDTO">
+ 		insert into space values(hostbuilding_seq.nextval, #{space_nm}, #{space_sub_nm}, #{space_intro}, #{space_guide},
+ 								#{precaution}, #{space_addr}, #{space_pno}, #{space_time}, #{space_closed_dt},
+ 								#{space_comnum},44,88)
+ 									
+ 	</insert>
+
+
+	<update id="updateHostBuilding" parameterType="spaceDTO">
+ 		update space set SPACE_NM=#{space_nm}, SPACE_SUB_NM=#{space_sub_nm}, SPACE_INTRO=#{space_intro},SPACE_GUIDE=#{space_guide},
+ 								PRECAUTIONS=#{precaution}, SPACE_ADDR=#{space_addr}, SPACE_PNO=#{space_pno}, SPACE_TIME=#{space_time}, SPACE_CLOSED_DT=#{space_closed_dt},
+ 								SPACE_COMNUM=#{space_comnum}, 44, 88
+ 								where SPACE_NO=#{space_no}							
+
+	 
+	</update>
+ 	
+ 	<delete id="deleteHostBuilding" parameterType="int">
+		delete from space where SPACE_NO=#{space_no}
+	</delete>
+ 	
+	
+	<select id="getHostBuilding" parameterType="int" resultType="spaceDTO">
+		select * from space where SPACE_NO=#{space_no}
+	</select>
+	
+	<select id="getHostBuildingCount" resultType="Integer">
+		select count(*) from space
+	</select>
+	
+ 	</mapper>

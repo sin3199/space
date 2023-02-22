@@ -1,0 +1,168 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>예약 및 결제</title>
+    <!-- Bootstrap core CSS -->
+<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+    	.checkout_con{
+		width: 50%;
+		padding-right: 15px;
+		padding-left: 15px;
+		margin-right: auto;
+		margin-left: auto;
+    	}
+      @media (min-width: 768px) {
+        .checkout_con{
+        
+        }
+      }
+    </style>
+      </head>
+  <body class="bg-light">
+    
+<div class="checkout_con">
+  <div class="py-5 text-center">
+    <h2>예약 및 결제</h2>
+    <p class="lead">하단의 예약만 누르시면 예약자 명단에 올라가며 예약일 하루 전에는 결제를 해주셔야 이용하시는데 지장이 없습니다.</p>
+  </div>
+		<hr class="mb-4">
+      <form class="needs-validation" action="guest_checkout.do" method="POST" novalidate>
+       <div class="row">
+          <div class="col-md-5 mb-3">
+            <label for="res_nm">예약자명</label>
+            <input type="text" class="form-control" name="res_nm" placeholder=" 예약자명" value="" required>
+            <div class="valid-feedback">
+             	 예약자명을 입력해주세요.
+            </div>
+          </div>
+          <div class="col-md-5 mb-3">
+            <label for="Nickname">닉네임</label>
+            <input type="text" class="form-control" name="MEMBER_NM" placeholder="MEMBER_NM" value="" readonly>
+          </div>
+          <div class="col-md-2 mb-3">
+            <label for="res_personnel">예약인원</label>
+            <input type="text" class="form-control" name="res_personnel" placeholder="00" value="" required>
+             <div class="valid-feedback">
+             	예약인원을 입력해주세요.
+            </div>
+          </div>
+        </div>
+         <div class="mb-3">
+          <label for="res_pno">예약자 연락처</label>
+          <input type="text" class="form-control" name="res_pno" placeholder="-를 제외한 숫자만 입력해주세요" required>
+          <div class="invalid-feedback">
+			예약내역을 받을 이메일 주소를 입력해주세요.
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="res_email">이메일</label>
+          <input type="email" class="form-control" name="res_email" placeholder="이메일" required>
+          <div class="invalid-feedback">
+			예약내역을 받을 이메일 주소를 입력해주세요.
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="res_purpose">사용목적</label>
+          <input type="text" class="form-control" name="res_purpose" placeholder="간단한 사용목적을 입력해주세요">
+        </div>
+        
+        <div class="mb-3">
+          <label for="res_req">요청사항</label>
+          <input type="text" class="form-control" name="res_req" placeholder="요청사항을 입력해주세요">
+        </div>
+        
+        <div class="mb-3">
+          	<p>
+		      <label for="datetime">시작일</label>
+		      <input type="datetime-" name="start_date">
+		      <label for="time">시작 시간</label>
+		      <input type="time" name="start_time">
+		    </p>
+		    <p>
+		      <label for="date">종료일</label>
+		      <input type="date" name="end_date">
+		      <label for="time">종료 시간</label>
+		      <input type="time" name="end_time">
+			</p>
+        </div>
+
+        <div class="row">
+          <div class="col-md-5 mb-3">
+            <label for="space_no">건물명</label>
+            <input type="text" class="form-control" id="space_no" placeholder="space_nm" readonly>
+          </div>
+          <div class="col-md-5 mb-3">
+            <label for="room_no">방 이름</label>
+            <input type="text" class="form-control" id="room_no" placeholder="space_nm" readonly>
+          </div>
+
+        </div>
+        <hr class="mb-4">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="same-address" required>
+          <label class="custom-control-label" for="same-address">본 이용약관에 동의합니다.</label>
+		  <div class="invalid-feedback">
+			이용약관에 동의해주셔야합니다.
+          </div>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="save-info">
+          <label class="custom-control-label" for="save-info">광고 및 마케팅 수신에 동의</label>
+        </div>
+		<hr class="mb-4">
+        <h4 class="mb-3">Payment</h4>
+        <div class="d-block my-3">
+          <div class="custom-control custom-radio">
+            <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked required>
+            <label class="custom-control-label" for="credit">신용카드 결제</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input id="debit" name="paymentMethod" type="radio" class="custom-control-input" required>
+            <label class="custom-control-label" for="debit">무통장입금</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input" required>
+            <label class="custom-control-label" for="paypal">현장결제</label>
+          </div>
+        </div>
+         <hr class="mb-4">
+         <button class="btn btn-primary" type="submit">예약하기</button>
+		 <hr class="mb-4">
+      </form>
+</div>
+<script>
+//Example starter JavaScript for disabling form submissions if there are invalid fields
+(function () {
+  'use strict'
+
+  window.addEventListener('load', function () {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation')
+
+    // Loop over them and prevent submission
+    Array.prototype.filter.call(forms, function (form) {
+      form.addEventListener('submit', function (event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault()
+          event.stopPropagation()
+
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+  }, false)
+})()
+
+</script>
+  
+
+<script src="resources/js/jquery.js" ></script>
+<script src="resources/bootstrap/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

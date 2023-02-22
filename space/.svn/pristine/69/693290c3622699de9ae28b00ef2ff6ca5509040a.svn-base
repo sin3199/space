@@ -1,0 +1,112 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="resources/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link href="resources/css/adminstyle.css" rel="stylesheet">
+  </head>
+  <body>
+    <nav>
+        <div class="logo-name">
+            <div class="logo-image">
+            </div>
+
+            <a href="admin_main.do"><span class="logo_name">관리자 페이지</span></a>
+        </div>
+
+        <div class="menu-items">
+            <ul class="nav-links">
+                <li><a href="admin_listHost.do">
+                    <i class="uil uil-estate"></i>
+                    <span class="link-name">Host 관리</span>
+                </a></li>
+                <li><a class="goGuestList" href="admin_listGuest.do">
+                    <i class="uil uil-files-landscapes"></i>
+                    <span class="link-name">Guest 관리</span> 
+                </a></li>
+                <li><a href="admin_insertCategory.do">
+                    <i class="uil uil-chart"></i>
+                    <span class="link-name">카테고리 등록</span>
+                </a></li>
+                <li><a href="admin_listCategory.do">
+                    <i class="uil uil-thumbs-up"></i>
+                    <span class="link-name">카테고리 관리</span>
+                </a></li>
+                <li><a href="admin_listRoom.do">
+                    <i class="uil uil-comments"></i>
+                    <span class="link-name">Host 공간 관리</span>
+                </a></li>
+                <li><a href="admin_listReserve.do">
+                    <i class="uil uil-share"></i>
+                    <span class="link-name">Room 예약 리스트</span>
+                </a></li>
+            </ul>
+            
+            <ul class="logout-mode">
+                <li><a href="#">
+                    <i class="uil uil-signout"></i>
+                    <span class="link-name">Logout</span>
+                </a></li>
+
+                <li class="mode">
+                    <a href="#">
+                        <i class="uil uil-moon"></i>
+                    <span class="link-name">Dark Mode</span>
+                </a>
+
+                <div class="mode-toggle">
+                  <span class="switch"></span>
+                </div>
+            </li>
+            </ul>
+        </div>
+    </nav>
+
+
+
+<section class="dashboard">
+        <div class="top">
+            <i class="uil uil-bars sidebar-toggle"></i>
+			<div class="select-box col-md-">
+				<select class="form-control" name="select" aria-label="Default select example">  
+					<option selected>Open this select menu</option>
+					<option value="1">One</option>
+					<option value="2">Two</option>
+					<option value="3">Three</option>
+				</select>
+			</div>
+            <div class="search-box">
+                <i class="uil uil-search"></i>
+                <input type="text" name="search" placeholder="Search here...">
+            </div>
+            <div class="saerch-button">
+            	<button type="button" class="btn btn-dark">검색</button>
+            </div>
+            <div class="page-move">
+            	<a href="guest_main.do">
+                    <span class="link-name">게스트</span>
+            	</a>
+            	<a href="host_home.do">
+                    <span class="link-name">호스트</span>
+            	</a>
+            	<a href="login.do">
+                    <span class="link-name">로그인</span>
+            	</a>
+            	<a href="main.do">
+                    <span class="link-name">메인으로</span>
+            	</a>
+            </div>
+            
+            
+            
+            
+            
+            
+            
+            
+        </div>

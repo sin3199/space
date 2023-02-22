@@ -1,0 +1,44 @@
+package com.bigdataB.space.dto;
+
+
+import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+
+public class SpaceRoomDTO {
+	private int room_no; 				//방 번호
+	private String room_nm;			//방 이름
+	private String room_price;		//방 가격
+	private String room_fit;			//수용인원
+	private String room_desc;		//방 설명
+	
+	
+	private int room_st;					//방 상태
+	private int space_no;				//건물 번호
+	private String room_img1;		//방 이미지1
+	private String room_img2;		//방 이미지2
+	private String room_img3;		//방 이미지3
+	private String room_img4;		//방 이미지4
+	private String room_img5;		//방 이미지5
+	
+	private String room_week;
+	
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+	private Date room_time_s;	//대여가능 시작시간
+
+	 
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+	 private Date room_time_e;	//대여가능 종료시간
+	
+	private String time_s;
+	private String time_e;
+}
+

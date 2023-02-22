@@ -1,0 +1,43 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="top.jsp" %>
+
+<div class="dash-content">
+	<div>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>닉네임<i id="host_nm" class="uil uil-sort-amount-down"></i></th>
+					<th>이메일<i id="host_email" class="uil uil-sort-amount-down"></i></th>
+					<th class="hi">비밀번호<i class="uil"></i></th>
+					<th>가입일자<i id="host_reg_dt" class="uil uil-sort-amount-down"></i></th>
+					<th>연락처<i id="host_pno" class="uil uil-sort-amount-down"></i></th>
+					<th>공간이름(링크)<i id="space_nm" class="uil uil-sort-amount-down"></i></th>
+					<th>사업자번호<i id="space_comnum" class="uil uil-sort-amount-down"></i></th>
+					<th class="textPosition">삭제</th>
+				</tr>
+			</thead>
+			<tbody class="table-body">
+			<c:if test="${empty listHost}">
+				<tr>
+					<td colspan="6">등록된 Host가 없습니다.</td>
+				</tr>
+			</c:if>
+			<c:forEach var="dto" items="${listHost}">
+				<tr> 
+					<td>${dto.member_nm}</td>
+					<td>${dto.member_email}</td>
+					<td>${dto.member_pw}</td>
+					<td>${dto.member_reg_dt}</td>
+					<td>${dto.member_pno}</td>
+					<td>${dto.space_nm}</td>
+					<td>${dto.space_comnum}</td>
+					<td>삭제</td>
+				</tr>
+			</c:forEach>
+			</tbody>
+		</table>
+	</div>
+</div>
+<%@ include file="bottom.jsp"%>

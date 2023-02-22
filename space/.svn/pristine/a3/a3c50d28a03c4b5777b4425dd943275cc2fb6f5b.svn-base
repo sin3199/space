@@ -1,0 +1,478 @@
+let user = {};
+
+function CV_checkIdPattern(str) {
+	var pattern1 = /[0-9]/; // 숫자
+	var pattern2 = /[a-zA-Z]/; // 문자
+	var pattern3 = /[~!#$%^&*()_+|<>?:{}]/; // 특수문자
+
+	var numtextyn = (pattern1.test(str) || pattern2.test(str));
+	if (!numtextyn || pattern3.test(str) || str.length > 14) {
+		alert("닉네임는 14자리 이하 문자 와 숫자로 구성하여야 합니다.");
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function CV_checkEmailPattern(str) {
+	var pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/; // email패턴
+
+	if (!pattern.test(str)) {
+		alert("이메일 형태로 구성하셔야합니다.");
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function CV_checkPasswordPattern(str) {
+	var pattern1 = /[0-9]/; // 숫자
+	var pattern2 = /[a-zA-Z]/; // 문자
+	var pattern3 = /[~!@#$%^&*()_+|<>?:{}]/; // 특수문자
+	if (!pattern1.test(str) || !pattern2.test(str) || !pattern3.test(str)
+			|| str.length < 8) {
+		alert("비밀번호는 8자리 이상 문자, 숫자, 특수문자로 구성하여야 합니다.");
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function checkphone(str) {
+	if (!str.length > 12) {
+		alert("전화번호를 다시한번 확인하세요.")
+
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function chkValue() {
+	var emailChk = $("#emailChkYN").val();
+	var cretChk = $("#cretChkYN").val();
+	if (emailChk == "N") {
+		alert("email 중복확인이 되지 않았습니다.");
+		$("#emailChk").focus();
+		return false;
+	} else if (cretChk == "N") {
+		alert("email 인증확인이 되지 않았습니다.");
+		$("#certChk").focus();
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function findChkEmail() {
+	var email_test = $("#member_email").val();
+	var grade_test = $("#member_grade").val();
+	if (CV_checkEmailPattern(email_test)) {
+		$.ajax({
+			type : "post",
+			url : "emailCheck.do",
+			dataType : "json",
+			data : {
+				member_email : email_test,
+				member_grade : grade_test
+			},
+			success : function(res) {
+				console.log(res)
+				if (res.result != null) { // 이 속성은 Map Key값이랑 맞추면돼
+					user = res.result;
+					$("#emailfindChk").prop("disabled", true);
+					sendmail();
+
+					$("#emailChkYN").val("Y");
+					$("#member_email").attr("readOnly", true);
+					$("#member_email").css("background", "#E6E6E6");
+					$("#emailChk").attr("disabled", true);
+					$("#emailChk").css("background", "#E1E9FF");
+				} else {
+					alert("가입한 이메일이 아닙니다.");
+				}
+			},
+			error : function(err) {
+				console.log(err);
+			}
+		});
+	}
+}
+
+function duplChkEmail() {
+	var email_test = $("#member_email").val();
+	var grade_test = $("#member_grade").val();
+	if (CV_checkEmailPattern(email_test)) {
+		$.ajax({
+			type : "post",
+			url : "emailCheck.do",
+			dataType : "json",
+			data : {
+				member_email : email_test,
+				member_grade : grade_test
+			},
+			success : function(res) {
+				console.log(res)
+				if (res.result == null) { // 이 속성은 Map Key값이랑 맞추면돼
+					$("#emailChkText").html("사용가능한이메일입니다.<br>");
+					const elInput = document.createElement('input');
+					elInput.setAttribute('class',
+							'form-control mail-check-input');
+					elInput.setAttribute("id", "cret");
+					elInput.setAttribute('placeholder', '인증번호 6자리를 입력해주세요.');
+
+					const elBtn = document.createElement('button');
+					elBtn.setAttribute('class', 'btn btn-primary');
+					elBtn.setAttribute('type', 'button');
+					elBtn.setAttribute('id', 'mailCheck');
+					elBtn.setAttribute('name', 'mail-Check-Btn');
+
+					const elBtnText = document.createTextNode('인증번호 발송');
+					elBtn.appendChild(elBtnText);
+
+					const elBtnChk = document.createElement('button');
+					elBtnChk.setAttribute('class', 'btn btn-primary');
+					elBtnChk.setAttribute('id', 'certChk');
+					elBtnChk.setAttribute('type', 'button');
+					const elBtnChkText = document.createTextNode('인증 확인');
+					elBtnChk.appendChild(elBtnChkText);
+
+					$('.certi').append(elInput);
+					$('.certiBtn').append(elBtn);
+					$('.certiChk').append(elBtnChk);
+
+					$("#emailChkText").css({
+						"display" : "block",
+						"color" : "#3895EB"
+					});
+					$("#emailChkYN").val("Y");
+					$("#member_email").attr("readOnly", true);
+					$("#member_email").css("background", "#E6E6E6");
+					$("#emailChk").attr("disabled", true);
+					$("#emailChk").css("background", "#E1E9FF");
+				} else {
+					$("#emailChkText").html("중복된 이메일입니다.");
+					$("#emailChkText").css({
+						"display" : "block",
+						"color" : "#EB3636"
+					});
+				}
+			},
+			error : function(err) {
+				console.log(err);
+			}
+		});
+	}
+}
+/* [aes128Decode 이벤트 함수 정의] */
+function aes128Decode(data, base64) {
+	console.log("[aes128Decode] : [start]");
+
+	const decrypt = CryptoJS.AES.decrypt(data, CryptoJS.enc.Base64
+			.parse(base64), {
+		mode : CryptoJS.mode.ECB,
+		padding : CryptoJS.pad.Pkcs7
+	});
+
+	// [디코딩 된 데이터 확인 실시]
+	let aes128EncodeData = decrypt.toString(CryptoJS.enc.Utf8);
+	console.log("[data] : " + aes128EncodeData);
+
+	return aes128EncodeData;
+};
+
+function sendmail() {
+
+	var email = $("#member_email").val();
+	$.ajax({
+		type : "post",
+		url : "sendmail.do",
+		dataType : "json",
+		data : {
+			member_email : email
+		},
+		success : function(data) {
+			let key = 'secretkeyspace12';
+			var base64 = btoa(key);
+
+			alert('인증번호가 전송되었습니다.')
+
+			// 여기에서 인증번호 input들을 생성해야하고
+			const elInput = document.createElement('input');
+			elInput.setAttribute('class', 'form-control mail-check-input');
+			elInput.setAttribute("id", "cret");
+			elInput.setAttribute('placeholder', '인증번호 6자리를 입력해주세요.');
+
+			const elBtnChk = document.createElement('button');
+			elBtnChk.setAttribute('class', 'btn btn-primary');
+			elBtnChk.setAttribute('id', 'pwcertChk');
+			elBtnChk.setAttribute('type', 'button');
+			elBtnChk.setAttribute('style', 'width:150px;')
+			const elBtnChkText = document.createTextNode('인증 확인');
+			elBtnChk.appendChild(elBtnChkText);
+
+			$('.pwcerti').append(elInput);
+			$('.pwcertiChk').append(elBtnChk);
+
+			$(document).on("click", "#certChk", function() {
+				let str = $("#cret").val()
+				if (aes128Decode(data.checkNum, base64) == str) {
+					alert("인증번호가 일치합니다.");
+					$("#certChk").prop("disabled", true);
+					$("#cretChkYN").val("Y");
+				} else {
+					alert("인증번호가 불일치합니다. 다시한번확인해주세요.");
+				}
+			})
+
+			$(document).on("click", "#pwcertChk", function() {
+				let str = $("#cret").val()
+				if (aes128Decode(data.checkNum, base64) == str) {
+					alert("인증번호가 일치합니다. 비밀번호를 재설정해주세요");
+					$("#pwcertChk").prop("disabled", true);
+					$("#cretChkYN").val("Y");
+					const pwInput = document.createElement('input');
+					pwInput.setAttribute('class', 'form-control');
+					pwInput.setAttribute('type', 'password');
+					pwInput.setAttribute('id', 'member_pw');
+					pwInput.setAttribute('name', 'member_pw');
+					pwInput.setAttribute('placeholder', '재설정 비밀번호');
+					const pwreInput = document.createElement('input');
+					pwreInput.setAttribute('class', 'form-control');
+					pwreInput.setAttribute('type', 'password');
+					pwreInput.setAttribute('id', 're_pw');
+					pwreInput.setAttribute('placeholder', '비밀번호확인');
+					const pwChBtn = document.createElement('button');
+					pwChBtn.setAttribute('class', 'btn btn-primary');
+					pwChBtn.setAttribute('id', 'pwchange');
+					pwChBtn.setAttribute('type', 'button');
+					pwChBtn.setAttribute('style', 'width:150px;')
+					const pwBtnChkText = document.createTextNode('비밀번호 변경');
+					pwChBtn.appendChild(pwBtnChkText);
+					$('.pwfind').append(pwInput);
+					$('.pwrefind').append(pwreInput);
+					$('.pwChBtn').append(pwChBtn);
+				} else {
+					alert("인증번호가 불일치합니다. 다시한번확인해주세요.");
+				}
+			})
+
+		},
+		error : function(err) {
+			console.log(err);
+		}
+	});
+}
+function changePw() {
+	var changepw = $("#member_pw").val();
+	var emailtest = $("#member_email").val();
+	var grade_test = $("#member_grade").val();
+	if (CV_checkPasswordPattern(changepw)) {
+		$.ajax({
+			type : "post",
+			url : "changePw.do",
+			dataType : "json",
+			data : {
+				member_pw : changepw,
+				member_email : emailtest,
+				member_grade : grade_test
+			},
+			success : function(res) {
+				console.log(res);
+				if (res.res == 1) {
+					alert("패스워드가 변경되었습니다.");
+					if (user.member_grade == '1') {
+						location.replace('hostLogin.do');
+					} else {
+						location.replace('guestLogin.do');
+					}
+				}
+			},
+			error : function(err) {
+				console.log(err);
+			}
+
+		});
+	}
+}
+function findEmail() {
+	var tel = $("#member_pno").val();
+	var grade = $("#member_grade").val();
+	$.ajax({
+		type : "post",
+		url : "findEmail.do",
+		dataType : "json",
+		data : {
+			member_pno : tel,
+			member_grade : grade
+		},
+		success : function(res) {
+			console.log(res.MemberDTO);
+			if (res.MemberDTO) {
+				$("#findmail").html(res.MemberDTO.member_email);
+				$("#findmail").css({
+					"display" : "block",
+					"color" : "#3895EB"
+				});
+
+			} else {
+				$("#findmail").html("전화번호가 일치하지않거나, 회원이 아니십니다.");
+				$("#findmail").css({
+					"display" : "block",
+					"color" : "#EB3636"
+				});
+			}
+		},
+		error : function(err) {
+			console.log(err);
+		}
+	});
+}
+function infopwChange(){
+	var pw = $("#member_pw").val();
+	var grade =$("#member_grade").val();
+	var email = $("#member_email").val();
+	
+	$.ajax({
+		type : "post",
+		url : "infopwChange.do",
+		dataType : "json",
+		data :{
+			member_pw : pw,
+			member_grade : grade,
+			member_email : email
+		},
+		success : function(res){
+			console.log(res.res);
+			if (res.res == 1) {
+				alert("패스워드가 변경되었습니다.");
+			}
+		},
+		error : function(err){
+			console.log(err);
+		}
+	});
+
+}
+$(document).ready(function() { // 제이쿼리 기본
+	
+	$("#infopwChange").click(function(){
+		infopwChange();
+	})
+	$("#emailFind").click(function() {
+		findEmail();
+	})
+	$("#emailChk").click(function() {
+		duplChkEmail();
+	})
+	$("#emailfindChk").click(function() {
+		findChkEmail();
+	})
+	$("#submit").click(function() {
+		chkValue();
+	})
+	// 아... 동적 이벤트 이렇게 거는거 아닌디
+	$(document).on("click", "#mailCheck", function() {
+		$("#mailCheck").prop("disabled", true);
+		sendmail();
+	})
+	$(document).on("click", "#pwchange", function() {
+		let str = $("#member_pw").val()
+		let str2 = $("#re_pw").val()
+		if (str == str2) {
+			changePw();
+		} else {
+			$("#re_pw").val("")
+			$("#re_pw").focus();
+			alert("비밀번호가 일치하지 않습니다.");
+		}
+		;
+	})
+	$(document).on("change","#room_week", function(){
+		var els = $("button.day");
+		
+		
+	})
+	$("#member_pno").on("change", function() {
+		let str = $("#member_pno").val()
+		if (!checkphone(str)) {
+			$("#member_pno").val("")
+			$("#member_pno").focus();
+		}
+		;
+	})
+	$("#member_nm").on("change", function() { // click 이벤트 걸기 id값으로
+		let str = $("#member_nm").val() // id값으로 내부값가져오기
+		if (!CV_checkIdPattern(str)) {
+			$("#member_nm").val("")
+			$("#member_nm").focus();
+		}
+		;
+	})
+	$("#member_email").on("change", function() {
+		let str = $("#member_email").val()
+		if (!CV_checkEmailPattern(str)) {
+			$("#member_email").val("")
+			$("#member_email").focus();
+		}
+		;
+	})
+	$("#member_pw").on("change", function() {
+		let str = $("#member_pw").val()
+		if (!CV_checkPasswordPattern(str)) {
+			$("#member_pw").val("")
+			$("#member_pw").focus();
+		}
+		;
+	})
+	$("#re_pw").on("change", function() {
+		let str = $("#member_pw").val()
+		let str2 = $("#re_pw").val()
+		if (str == str2) {
+		} else {
+			$("#re_pw").val("")
+			$("#re_pw").focus();
+			alert("비밀번호가 일치하지 않습니다.");
+		}
+		;
+	})
+
+	var autoHypenPhone = function(str) {
+		
+		str = str.replace(/[^0-9]/g, '');
+		var tmp = '';
+		if (str.length < 4) {
+			return str;
+		} else if (str.length < 7) {
+			tmp += str.substr(0, 3);
+			tmp += '-';
+			tmp += str.substr(3);
+			return tmp;
+		} else if (str.length < 11) {
+			tmp += str.substr(0, 3);
+			tmp += '-';
+			tmp += str.substr(3, 3);
+			tmp += '-';
+			tmp += str.substr(6);
+			return tmp;
+		} else {
+			tmp += str.substr(0, 3);
+			tmp += '-';
+			tmp += str.substr(3, 4);
+			tmp += '-';
+			tmp += str.substr(7);
+			return tmp;
+		}
+		return str;
+	}
+	
+	var phoneNum = document.getElementById('member_pno');
+	phoneNum.onkeyup = function() {
+		if (this.value.length > 13) {
+			alert("전화번호를 확인해주세요");
+			this.value = autoHypenPhone((this.value).substring(0,13));
+		}else{
+			this.value = autoHypenPhone(this.value);
+		}
+	}
+})

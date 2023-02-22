@@ -1,0 +1,62 @@
+
+function modaltest(res_no){
+
+	
+	$.ajax({
+		type : "post",
+		url : "res.do",
+		dateType : "json",
+		data :{
+			res_no	: res_no
+		},
+		success : function(res){
+			$(".container-lg").empty();
+			
+			var str = '    	<div class="container-lg">';
+			$.each(res, function(i){
+			      
+			    str  += '<table class="table" style="text-align: center;">';
+				str  +='<tr>';
+			    str  +='<th class="col-1">인원수</th>';
+			    str  += '<th class="col-2">예약자연락처</th>';
+			    str  += '<th class="col-3">예약자이메일</th>';
+			    str  +=    '<th class="col-3">사용목적</th>';
+		    	str  +=  '</tr>';
+		      		
+			    str  +=   ' <tr>';
+			    str  +=    	'<td>'+this.res_personnel+'</td>';
+			    str  +=    	'<td>'+this.res_pno+'</td>';
+			    str  +=    	'<td>'+this.res_email+'</td>';
+			    str  +=   	'<td>'+this.res_purpose+'</td>';
+			 
+			    str  +=   '</tr>';
+			    str  += '</table>';
+			        
+			    str  +=    '<table class="table" style="text-align: center;">';
+			    str  +='<tr>';
+			    str  +=   '<th class="col-4">요청사항</th>';
+			    str  +=    '<th class="col-3">이용 시작일</th>';
+			    str  +=   '<th class="col-3">이용 종료일</th>';
+			    str  +=   '</tr>';
+
+			    str  +=    '<tr>';
+			    str  +=    	'<td>'+this.res_req+'</td>';
+			    str  +=    	'<td>'+this.use_dt+'</td>';
+			    str  +=    	'<td>'+this.use_time+'</td>';
+			    str  +=   '</tr>';
+			    str  +=   '</table>';
+			    str  += '</div>';
+			});
+			$('.container-lg').append(str);
+			
+			console.log(res.res);
+		},
+		error : function(err){
+			console.log(err);
+		}
+			
+	});
+}
+
+
+

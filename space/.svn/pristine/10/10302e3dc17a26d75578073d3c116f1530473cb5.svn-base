@@ -1,0 +1,16 @@
+package com.bigdataB.space.dto;
+
+import java.util.ArrayList;
+
+import lombok.Getter;
+import lombok.Setter;
+
+
+@Setter
+@Getter
+public class RefineDTO{
+	private String day;
+	private int TotalTime;
+	private int startday;
+	private int room_no;
+}

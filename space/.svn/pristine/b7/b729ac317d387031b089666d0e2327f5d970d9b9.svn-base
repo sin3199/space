@@ -1,0 +1,234 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+<%@ include file="../host_top.jsp"%>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+	
+	
+	$(document).on("click", ".modalGO", function () {
+	     var myBookId = $(this).data('id');
+	     $(".modal-body #idid").text(myBookId);
+	     
+	     //$(".modal-body #bookId").val( myBookId );
+	     // As pointed out in comments, 
+	     // it is superfluous to have to manually call the modal.
+	     // $('#addBookDialog').modal('show');
+	});
+	
+</script>
+
+<!-- Modal창 내용 -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">예약 상세정보</h5>
+      </div>
+      <div class="modal-body">
+     	<div class="container-lg">
+        <table class="table" style="text-align: center;">
+        <tr>
+        <th class="col-1">인원수</th>
+	      <th class="col-2">예약자연락처</th>
+	      <th class="col-3">예약자이메일</th>
+	      <th class="col-3">사용목적</th>
+	      </tr>
+	      		
+		<c:forEach var="rdto" items="${ModalList}">
+	      <tr>
+	      	<td>${rdto.res_personnel}</td>
+	      	<td>${rdto.res_pno}</td>
+	      	<td>${rdto.res_email}</td>
+	      	<td>${rdto.res_purpose}</td>
+	      </tr>
+	     </c:forEach>
+        </table>
+        
+        <table class="table" style="text-align: center;">
+        <tr>
+	      <th class="col-4">요청사항</th>
+	      <th class="col-3">이용 시작일</th>
+	      <th class="col-3">이용 종료일</th>
+	      </tr>
+
+		<c:forEach var="rdto" items="${ModalList}">
+	      <tr>
+	      	<td>${rdto.res_req}</td>
+	      	<td>${rdto.use_dt}</td>
+	      	<td>${rdto.use_time}</td>
+	      </tr>
+	     </c:forEach>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal 끝 -->
+
+
+
+<!-- Modal222222222222222222222222222222222창 내용 -->
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">후기</h5>
+      </div>
+      <div class="modal-body">
+     
+     	<span id="idid"></span>
+		<h1>야 방에서 바퀴벌레 나온다더라</h1>★★★★★
+		<p>사진</p>
+		<p>♚♚히어로즈 오브 더 스☆톰♚♚가입시$$전원 카드팩☜☜뒷면100%증정※ ♜월드오브 워크래프트♜펫 무료증정￥ 특정조건 §§디아블로3§§★공허의유산★초상화획득기회@@@ 즉시이동http://kr.battle.net/heroes/ko/</p>
+		<br>
+		<form>
+			<div class="form-group">
+	          <label for="message-text" class="col-form-label">Message:</label>
+	          <textarea class="form-control" id="message-text"></textarea>
+	        </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal222222222222222222222222222222222222222222222222222 끝 -->
+
+	       		 
+<!-- center// -->
+
+<script type="text/javascript">
+	function checkDel(res_no){
+		var isDel = window.confirm("정말로 삭제하시겠습니까?")
+		if (isDel){
+			document.d.res_no.value = res_no
+			document.d.submit()
+		}
+	}
+</script>
+
+<div class="container">
+
+	<div class="py-5 text-center">
+	  <h2>예약 리스트</h2>
+	  <p class="lead">Below is an example form built entirely with Bootstrap’s form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.</p>
+	</div>
+	
+  <hr class="mb-4">
+
+<form name ="r" action="host_guestList.do" method="post">
+	<table class="table" style="text-align: center;">
+	  <thead class="thead-dark">
+	    <tr>
+	      <th scope="col">NO.</th>
+	      <th scope="col">예약자명</th>
+	      <th scope="col">방이름</th>
+	      <th scope="col">예약정보</th>
+	      <th scope="col">결제수단</th>
+	      <th scope="col">결제상태</th>
+	      <th scope="col">후기작성</th>
+	      <th scope="col">삭제버튼</th>
+	    </tr>
+	  </thead>
+	 <tbody>
+	  
+	  <c:if test="${empty listGuestRes}">
+					<tr>
+						<td colspan="6">예약된 방이 없습니다.</td>
+					</tr>
+		</c:if>
+		<c:set var="page_num" value="${requestScope.page_num}" />
+		<c:forEach var="rdto" items="${listGuestRes}">
+		
+	    <tr>
+	    <th><c:out value="${page_num}" />
+				<c:set var="page_num" value="${page_num-1}" /></th>
+	         <td>${rdto.res_nm}</td>
+	      	<td>${rdto.room_nm}</td>
+	       	<td>
+	       <button type="button" id="listbutton" class="btn btn-dark" data-toggle="modal" data-target="#exampleModal" onclick="javascript:modaltest(${rdto.res_no})">상세보기</button>
+	       	</td>
+				 
+					<c:set var= "pay_m" value="${rdto.pay_m}"/>
+					<c:choose>
+						<c:when test="${pay_m==1}">
+							<td>현장결제</td>
+						</c:when>
+						<c:when test="${pay_m==2}">
+							<td>무통장 입금</td>
+						</c:when>
+					</c:choose>
+				<c:set var= "pay_st" value="${rdto.pay_st}"/>
+					<c:choose>
+					<c:when test="${pay_st==0}">
+							<td>대기</td>
+						</c:when>
+						<c:when test="${pay_st==1}">
+							<td>완료</td>
+						</c:when>
+						<c:when test="${pay_st==2}">
+							<td>취소</td>
+						</c:when>
+					</c:choose>
+					
+		  <td>
+		  	<a data-toggle="modal" data-id="${rdto.res_no}" title="Add this item" class="modalGO btn btn-primary" href="#exampleModal2">test</a>
+		  </td>
+	      <td><a href="javascript:checkDel('${rdto.res_no}')" class="btn btn-danger btn-icon-split">
+									<span class="text">삭제</span>
+								</a></td>
+	    </tr>
+	    
+		</c:forEach>
+	  </tbody>
+	</table>
+</form>
+
+	<form name="d" action="deleteReserve.do" method="post">
+		<input type="hidden" name="res_no" value="${rdto.getRes_no()}"/>
+	</form>
+
+	<nav aria-label="Page navigation example">
+	  <ul class="pagination justify-content-center">
+	  
+	  <c:if test="${not empty listGuestRes}">	
+	  <!-- Previous -->
+	  <c:if test="${startPage > pageBlock}">
+	    <li class="page-item">
+	      <a class="page-link text-dark" href="host_guestList.do?pageNum=${startPage-1}">
+	        <span aria-hidden="true">&laquo;</span>
+	      </a>
+	    </li>
+	    </c:if>
+	    
+	    <!-- 123 -->
+    	<c:forEach var="i" begin="${startPage}" end="${endPage}">
+			<li class="page-item">
+			<a class="page-link text-dark" href="host_guestList.do?pageNum=${i}">${i}</a></li>
+		</c:forEach>
+		
+		<!-- Next -->
+		<c:if test="${pageCount > endPage}">
+	    <li class="page-item">
+	      <a class="page-link text-dark" href="host_guestList.do?pageNum=${endPage+1}">
+	        <span aria-hidden="true">&raquo;</span>
+	      </a>
+	    </li>
+	    </c:if>
+	     </c:if>
+	  </ul>
+	</nav>
+</div>
+
+<!-- center// -->
+	<script src="resources/js/main2.js"></script>
+<%@ include file="../host_bottom.jsp"%>
+

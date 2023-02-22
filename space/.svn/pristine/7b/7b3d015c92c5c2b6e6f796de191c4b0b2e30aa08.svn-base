@@ -1,0 +1,102 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%@ include file="top.jsp" %>
+<section class="dashboard">
+        <div class="top">
+            <i class="uil uil-bars sidebar-toggle"></i>
+			
+			
+				<div class="select-box col-md-">
+					<select class="form-control" name="select">  
+						<option selected>선택</option>
+						<option value="cate_nm">카테고리명</option>
+					</select>
+				</div>
+				<div class="search-box">
+					<i class="uil uil-search"></i>
+					<input class="form-search" type="text" name="search" id="cateSearch">
+				</div>
+            	<div class="search-button">
+            		<button id="cateSearchButton" type="button" class="btn btn-dark">검색</button>
+            	</div>
+            
+            
+           <div class="page-move">
+            	<a href="guest_main.do">
+                    <span class="link-name">게스트</span>
+            	</a>
+            	<a href="host_home.do">
+                    <span class="link-name">호스트</span>
+            	</a>
+            	<a href="guestLogin.do">
+                    <span class="link-name">로그인</span>
+            	</a>
+            	<a href="main.do">
+                    <span class="link-name">메인으로</span>
+            	</a>
+            </div>
+            
+        </div>
+
+
+
+
+
+
+<div class="dash-content">
+	<div>
+		<table class="table">
+			<thead class="table-head">
+				<tr clsss="table-secondary">
+					<th>카테고리 명 <i id="cate_nm" class="uil uil-sort-amount-down"></i></th>
+					<th>아이콘 </th>
+					<th>삭제 </th> 
+				</tr>
+			</thead>
+			<tbody class="table-body">
+				<c:if test="${empty listCate}">
+					<tr>
+						<td colspan="6">등록된 게시글이 없습니다.</td>
+					</tr>
+				</c:if>
+				<c:forEach var="dto" items="${listCate}">
+					<tr>
+						<td>${dto.cate_nm}</td>
+						<td><img src="/resources/img/cateIcon/${dto.cate_img}" width="200" height="180"></td>
+						<td>삭제</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+		<div class="paging">
+		<c:if test="${not empty listCate}">	
+			<c:if test="${startPage > pageBlock}">
+				[<a href="admin_listCategory.do?pageNum=${startPage-1}">이전</a>]
+			</c:if>
+			<c:forEach var="i" begin="${startPage}" end="${endPage}">
+				[<a href="admin_listCategory.do?pageNum=${i}">${i}</a>]
+			</c:forEach>	
+			<c:if test="${pageCount > endPage}">
+				[<a href="admin_listCategory.do?pageNum=${endPage+1}">다음</a>]
+			</c:if>
+		</c:if>
+		</div>
+	</div>
+</div>
+<%@ include file="bottom.jsp"%>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

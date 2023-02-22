@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+ 	
+ 	<mapper namespace="com.bigdataB.space.mapper.spaceRoomMapper">
+ 	
+ 	<select id="listRoom" parameterType="java.util.Map" resultType="spaceRoomDTO">
+ 	select * from (select rownum rn, A.* from 
+			(select*from space_room where space_no=#{space_no} order by room_no desc)A) 
+				where rn between #{start} and #{end}
+ 	</select>
+ 	
+ 	<insert id="insertRoom" parameterType="spaceRoomDTO">
+ 	insert into space_room 
+ 	(ROOM_NO, ROOM_NM, ROOM_PRICE, ROOM_FIT, ROOM_DESC, ROOM_TIME_E, ROOM_TIME_S, ROOM_ST, SPACE_NO, ROOM_IMG1, ROOM_IMG2, ROOM_IMG3, ROOM_IMG4, ROOM_IMG5, ROOM_WEEK)
+ 	values(room_seq.nextval,#{room_nm},#{room_price},#{room_fit},#{room_desc},
+ 	TO_DATE(#{time_e},'HH24'),
+ 	TO_DATE(#{time_s},'HH24'),
+ 	#{room_st},#{space_no},
+ 	#{room_img1},#{room_img2},#{room_img3},#{room_img4},#{room_img5},#{room_week})
+ 	</insert>
+
+	<update id="updateRoom" parameterType="spaceRoomDTO">
+	 update space_room set room_nm=#{room_nm},room_price=#{room_price},room_fit=#{room_fit}, room_desc=#{room_desc},
+	 	<if test =" room_img1 != null and room_img1 !='' and !room_img1.equals('')">
+			room_img1=#{room_img1},
+		</if>
+		<if test =" room_img2 != null and room_img2 !=''and !room_img2.equals('')">
+			room_img2=#{room_img2},
+		</if>
+		<if test =" room_img3 != null and room_img3 !=''and !room_img3.equals('')">
+			room_img3=#{room_img3},
+		</if>
+		<if test =" room_img4 != null and room_img4 !=''and !room_img4.equals('')">
+			room_img4=#{room_img4},
+		</if>
+		<if test =" room_img5 != null and room_img5 !=''and !room_img5.equals('')">
+			room_img5=#{room_img5},
+		</if>
+		<if test =" time_s!= null and time_s!=''and !time_s.equals('')">
+			room_time_s=TO_DATE(#{time_s},'HH24'),
+		</if>
+		<if test =" time_e!= null and time_e!=''and !time_e.equals('')">
+			room_time_e=TO_DATE(#{time_e},'HH24'),
+		</if>
+	 	room_st=#{room_st}, room_week = #{room_week} where room_no=#{room_no}
+	</update>
+ 	
+ 	
+ 	
+ 	<delete id="deleteRoom" parameterType="int">
+		delete from space_room where room_no = #{room_no}
+	</delete>
+ 	
+	
+	<select id="getRoom" parameterType="int" resultType="spaceRoomDTO">
+	select *from space_room where room_no =#{room_no}
+	</select>
+	
+	
+	<select id="getRoomCount" parameterType="spaceRoomDTO" resultType="Integer">
+		select count(*) from space_room where space_no=#{space_no}
+	</select>
+	
+	<select id="getSpace_nm" parameterType="Integer" resultType="String">
+		select space_nm from space where space_no=#{space_no}
+	</select>
+	
+ 	</mapper>

@@ -1,0 +1,24 @@
+package com.bigdataB.space.dto;
+
+import java.util.Date;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+
+public class ReviewDTO {
+	private int rev_no;				//이용후기 번호
+	private int res_like;				//별점
+	private int res_no;				//예약번호
+	private String rev_content;	//후기 내용
+	private String res_img;		//이미지 이름
+	private String rev_dt;			//후기 작성일
+	private String res_email;
+	private String reply_st;
+	private String reply_content;
+	private Date reply_dt;
+	private String member_nm;
+	private String res_nm;
+}

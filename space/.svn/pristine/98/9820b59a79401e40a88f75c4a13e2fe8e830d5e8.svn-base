@@ -1,0 +1,16 @@
+package com.bigdataB.space.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+
+public class GuestMyDibsDTO {
+	private int member_no;
+	private int room_no;
+	private String room_price; //방가격
+	private String room_nm;		//방명
+	private String room_desc;	//방설명
+	private String room_img1;	//룸이미지1
+}

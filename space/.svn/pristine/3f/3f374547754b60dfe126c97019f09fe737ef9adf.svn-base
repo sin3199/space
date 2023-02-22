@@ -1,0 +1,84 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ include file="top.jsp"%>
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>게스트예약정보</title>
+    <link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+<body>
+<div class="container">
+<div class="row">
+		
+	<div class="col-md-3 mb-4">
+		<div class="col-md ">
+			<div class="list-group">
+				  <a href="guest_my_info.do" class="list-group-item list-group-item-action">내정보</a>
+				  <a href="guest_my_passwd_edit.do" class="list-group-item list-group-item-action">비밀번호 수정</a>
+				  <a href="guest_reservelist.do" class="list-group-item list-group-item-action">예약정보</a>
+			</div>
+		</div>
+		</div>
+
+<div class="col-md-9 ">		
+<div class="col-md-12 ">		
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">no</th>
+      <th scope="col">방이름</th>
+      <th scope="col">사용목적</th>
+      <th scope="col">요청사항</th>
+      <th scope="col">결제상태</th>
+      <th scope="col">사용일</th>
+      <th scope="col">결제수단</th>
+      <th scope="col">취소요청</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td><a href="SPACE_ROOM_NO">space_nm</a></td>
+      <td>RES_PURPOSE</td>
+      <td>RES_REQ</td>
+      <td>PAY_ST</td>
+      <td>USE_DT</td>
+      <td>PAY_M</td>
+      <td>쥐소요청</td>      
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+	      <td>space_nm</td>
+	      <td>RES_PURPOSE</td>
+	      <td>RES_REQ</td>
+	      <td>PAY_ST</td>
+	      <td>USE_DT</td>
+	      <td>PAY_M</td>
+	      <td>쥐소요청</td>   
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+	      <td>space_nm</td>
+	      <td>RES_PURPOSE</td>
+	      <td>RES_REQ</td>
+	      <td>PAY_ST</td>
+	      <td>USE_DT</td>
+	      <td>PAY_M</td>
+	      <td>쥐소요청</td>   
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+</div>
+
+
+<script src="resources/js/jquery.js" ></script>
+<script src="resources/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

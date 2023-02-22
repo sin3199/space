@@ -1,0 +1,98 @@
+
+function modaltest(){
+	var res_no = $("#res_no").val();
+	$.ajax({
+		type : "post",
+		url : "res.do",
+		dateType : "json",
+		data :{
+			res_no	: res_no
+		},
+		success : function(res){
+			
+			$(".modal-content").empty();
+			
+			$.each(data, function(i){
+				
+			      var str = '<div class="modal-header">';
+			    str += '<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>';
+			    str += '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+			    str +=  '<span aria-hidden="true">&times;</span>';
+			    str += '</button>';
+			    str += '</div>';
+			    str += '<div class="modal-body">';
+			     
+			    str  += '<table class="table" style="text-align: center;">';
+				str  +='<tr>';
+			    str  +='<th class="col-1">인원수</th>';
+			    str  += '<th class="col-2">예약자연락처</th>';
+			    str  += '<th class="col-3">예약자이메일</th>';
+			    str  +=  '<th class="col-2">결제수단</th>';
+			    str  +=  '<th class="col-1">결제상태</th>';
+		    	str  +=  '</tr>';
+		      		
+			    str  +=   ' <tr>';
+			    str  +=    	'<td>'+res.res_personnel+'</td>';
+			    str  +=    	'<td>'+res.res_pno+'</td>';
+			    str  +=    	'<td>'+res.res_email+'</td>';
+			    str  +=    	'<c:set var= "pay_m" value=" '+res.pay_m+' "/>';
+				str  +=			'<c:choose>';
+			    str  +=				'<c:when test=" '+res.pay_m==1+' ">';
+			    str  +=					'<td>현장결제</td>';
+			    str  +=			'</c:when>';
+			    str  +=			'<c:when test=" '+res.pay_m==2+' ">';
+			    str  +=				'<td>무통장 입금</td>';
+			    str  +=			'</c:when>';
+			    str  +=			'</c:choose>';
+			    str  +=		'<c:set var= "pay_st" value=" '+res.pay_st+' "/>';
+			    str  +=			'<c:choose>';
+			    str  +=			'<c:when test=" '+res.pay_st==0+' ">';
+			    str  +=					'<td>대기</td>';
+			    str  +=				'</c:when>';
+			    str  +=				'<c:when test=" '+res.pay_st==1+' ">';
+			    str  +=						'<td>완료</td>';
+			    str  +=					'</c:when>';
+			    str  +=				'<c:when test=" '+res.pay_st==2+' ">';
+			    str  +=					'<td>취소</td>';
+			    str  +=				'</c:when>';
+			    str  +=			'</c:choose>';
+				      	
+			    str  +=   '</tr>';
+			    str  += '</table>';
+			        
+			    str  +=    '<table class="table" style="text-align: center;">';
+			    str  +='<tr>';
+			    str  +=    '<th class="col-4">사용목적</th>';
+			    str  +=   '<th class="col-4">요청사항</th>';
+			    str  +=    '<th class="col-2">이용 시작일</th>';
+			    str  +=   '<th class="col-2">이용 종료일</th>';
+			    str  +=   '</tr>';
+
+			    str  +=    '<tr>';
+			    str  +=   	'<td>'+res.res_purpose+'</td>';
+			    str  +=    	'<td>'+res.res_req+'</td>';
+			    str  +=    	'<td>'+res.use_dt+'</td>';
+			    str  +=    	'<td>'+res.use_time+'</td>';
+			    str  +=   '</tr>';
+			    str  +=   '</table>';
+			    str  += '</div>';
+			    str  += '<div class="modal-footer">';
+		     	str  +=  '<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>';
+			    str  +=   '</div>';
+			});
+			$(".modal-content").append(str);
+			
+			console.log(res.SRoom);
+		},
+		error : function(err){
+			console.log(err);
+		}
+			
+	});
+}
+$(document).ready(function(){
+	$("#listbutton").click(function(){
+		modaltest();
+	})
+	
+})
